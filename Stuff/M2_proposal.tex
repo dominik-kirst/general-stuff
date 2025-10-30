@@ -1,0 +1,96 @@
+\documentclass{article}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\renewcommand{\to}{\Rightarrow}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\UU}{\mathcal U}
+
+\newtheorem{exercise}{Exercise}
+
+\begin{document}
+
+\title{Singular Euler-Maclaurin Expansion in Rocq}
+\author{Andreas Buchheit, Cyril Cohen, Dominik Kirst, Assia Mahboubi}
+
+\date{M2 Internship Proposal}
+
+\maketitle
+
+\paragraph{Contact:}
+Feel free to contact any of the internship supervisors based in France.
+\begin{itemize}
+	\item
+	\url{cyril.cohen@inria.fr}
+	\item
+	\url{dominik.kirst@inria.fr}
+	\item
+	\url{assia.mahboubi@inria.fr}
+\end{itemize}
+
+\vspace{-0.2cm}
+\paragraph{Location:}
+The internship can be hosted at Inria Lyon, Inria Paris or Inria Rennes (Nantes site). Andreas Buchheit, based in Saarbrücken, Germany, will act as remote supervisor.
+
+\vspace{-0.2cm}
+\paragraph{Requirements:}
+Required are proficiency in using Rocq as well as a basic understanding of analysis.
+
+\vspace{-0.2cm}
+\paragraph{Context:}
+The Singular Euler-Maclaurin expansion (SEM) is a relatively recent generalisation~\cite{buchheit2022singular,buchheit2022efficient} of a more than 300-years-old summation formula developed by Euler and Maclaurin.
+While the original formula allows to efficiently compute large sums by means of integration and applies to everywhere continuous functions, the SEM extends the method to functions with singularities, for instance those commonly used to describe particle interactions and other physical forces.
+The derived algorithm of the SEM outperforms previous numerical approximations of these forces and therefore found applications in several domains of physical research~\cite{buchheit2023exact}, even receiving considerable attention in the media.\footnote{\scriptsize\url{https://blog.wolfram.com/2021/06/30/the-singular-euler-maclaurin-expansion-a-new-twist-to-a-centuries-old-problem/}}\footnote{\scriptsize\url{https://www.spektrum.de/magazin/langreichweitige-kraefte-verallgemeinerung-der-euler-maclaurin-formel/2030575}}
+
+\vspace{-0.2cm}
+\paragraph{Goals:}
+In the context of the growing interest in formalised mathematics and formally verified numerical algorithms, the goal of this internship is to formalise the SEM in Rocq's MathComp Analysis library~\cite{mahboubi2021mathematical,affeldt2023introduction}.
+Intermediate milestones are a formalisation of the original Euler-Maclaurin expansion as well as the SEM in the one-dimensional case.
+Targeting a more long-term perspective, the project thereby lays the foundation for a systematic use of proof assistants in computational physics.
+
+
+\bibliographystyle{unsrt}
+\bibliography{M2_proposal}
+
+\end{document}

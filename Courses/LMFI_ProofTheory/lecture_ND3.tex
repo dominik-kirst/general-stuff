@@ -1,0 +1,606 @@
+\documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
+\usecolortheme{orchid}
+\setbeamertemplate{footline}[frame number]
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\renewcommand{\to}{\Rightarrow}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\UU}{\mathcal U}
+\renewcommand{\AA}{\mathcal A}
+
+\usepackage{dsfont}
+
+\title[Natural Deduction 3]{Natural Deduction 3}
+\author[Dominik Kirst]{Dominik Kirst}
+
+\date[October 28th, 2025]{LMFI Proof Theory Course\\October 28th, 2025}
+
+
+% BOXES
+\usepackage[many]{tcolorbox}
+\newtcolorbox{emptybox}[1][]{
+	beamer,
+	width=(0.7\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widerbox}[1][]{
+	beamer,
+	width=(0.8\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widebox}[1][]{
+	beamer,
+	width=(\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+
+% TIMELINE
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{stackengine}
+\usetikzlibrary{trees, shapes, calc, positioning, shadows}
+
+\definecolor{darkcerulean}{rgb}{0.063661, 0.257392, 0.477463}
+\definecolor{scooter}{rgb}{0.161162, 0.775760, 0.885416}
+
+
+% #1 – box name
+% #2 – left color
+% #3 – right color
+% #4 – Title (may contain #1)
+\newcommand{\newlargebox}[4]{
+	\newtcolorbox{#1}[1][]{
+		beamer,
+		width=\textwidth+7pt,
+		enlarge left by=-3pt,
+		titlerule=3mm,
+		colframe=white,
+		coltitle={#2},
+		bottom=2pt, 
+		top=-4pt,
+		left=6pt,  
+		toptitle=2pt,
+		bottomtitle=-2pt,
+		fonttitle=\bfseries\large,
+		adjusted title={#4},
+		outer arc=.5mm,
+		arc=.5mm,
+		no shadow,
+		fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+		interior titled code={
+			\path [left color = {#2}, right color = {#3}]
+			(title.south west) + (8pt, 0) rectangle ++(\textwidth-1pt, 0.02);
+		}
+	}
+}
+
+
+\newlargebox{defaultbox}{darkcerulean}{scooter}{#1} 
+
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+
+
+\begin{document}
+
+%\beamerdefaultoverlayspecification{<+->}
+\definecolor{red}{RGB}{204,0,0}
+\definecolor{yellow}{RGB}{228,242,31}
+\definecolor{green}{RGB}{0,204,0}
+
+\newcommand\refs[1]{%
+	\begin{textblock*}{8cm}(0.3cm,9.2cm)%
+		\scriptsize {\color{gray}#1}
+	\end{textblock*}
+}
+
+\begin{frame}
+	\maketitle
+\end{frame}
+
+
+\begin{frame}{Recap}
+	Last week, we studied semantics of ND and completeness theorems:
+	\begin{itemize}
+		\vspace{0.3cm}
+		\item
+		Henkin's completeness proof
+		\vspace{0.3cm}
+		\item
+		Constructive refinement of Henkin's completeness proof
+		\vspace{0.3cm}
+		\item
+		Kripke semantics for intuitionistic ND
+		\vspace{0.3cm}
+		\item
+		Kripke completeness as semantic cut-elimination
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Plan for Today}
+	\begin{itemize}
+		\item 
+		Algebraic semantics:
+		\begin{itemize}
+			\item
+			Complete Heyting and Boolean algebras
+			\item
+			Completeness proofs
+		\end{itemize}
+		\vspace{0.3cm}
+		\item
+		Arithmetical systems:
+		\begin{itemize}
+			\item
+			Heyting arithmetic and Peano arithmetic
+			\item
+			Some meta-theoretical properties
+		\end{itemize}
+		\vspace{0.3cm}
+		\item
+		Friedman's A-translation:
+		\begin{itemize}
+			\item
+			Syntactic definition and correctness
+			\item
+			Applications
+		\end{itemize}
+	\end{itemize}
+	
+	\pause
+	\vspace{0.5cm}
+	First part still based on this paper:\\ \scriptsize \url{https://www.ps.uni-saarland.de/Publications/documents/ForsterEtAl_2021_Completeness.pdf}
+\end{frame}
+
+
+\begin{frame}{Heyting and Boolean Algebras}
+	Previous semantics mostly interpreted logical connectives in the meta-theory:
+	$$\MM\vDash A\land B \hspace{3em}:=\hspace{3em} \MM\vDash A \text{ ``and'' } \MM\vDash B$$
+	\pause
+	
+	This can be generalised to arbitrary algebraic structures capturing the same behaviour:
+	\pause
+	\begin{definition}
+		We call $\AA=(\Omega,\le,0,1,\sqcap,\sqcup,\sqsupset)$ a \textbf{Heyting algebra} if:
+		\begin{itemize}
+			\item
+			$\le$ is a preorder on $\Omega$ with $0$ being minimal and $1$ being maximal
+			\item
+			$\sqcap$ forms greatest lower bounds / meets: $z\le x\sqcap y$ if and only if $z\le x$ and $z\le y$
+			\item
+			$\sqcup$ forms least upper bounds / joins: $x\sqcup y\le z$ if and only if $x\le z$ and $y\le z$
+			\item
+			$\sqsupset$ forms Heyting implication: $z\le x\sqsupset y$ if and only if $z\sqcap x \le y$
+		\end{itemize}
+		We call $\AA$ a \textbf{Boolean algebra} if moreover $1\le x\sqcup (x\sqsupset 0)$.
+	\end{definition}
+	\pause
+	This generalises previous semantics as the meta-level truth values form such algebras!
+\end{frame}
+
+\newcommand{\lsem}{[\![}
+\newcommand{\rsem}{]\!]}
+\renewcommand{\LL}{\mathcal{L}}
+
+\begin{frame}{Soundness}
+	\pause
+	Given any Heyting algebra $\AA$ and a valuation $V(P)\in \Omega$ for each atom define:
+	\begin{align*}
+		\lsem P\rsem &:= V(P)& \lsem A\land B\rsem &:= \lsem A\rsem \sqcap \lsem B\rsem\\
+		\lsem \bot\rsem &:= 0& \lsem A\lor B\rsem &:= \lsem A\rsem \sqcup \lsem B\rsem\\
+		\lsem \top\rsem &:= 1& \lsem A\to B\rsem &:= \lsem A\rsem \sqsupset \lsem B\rsem
+	\end{align*}
+	\vspace{-0.5cm}
+	\pause
+	\begin{theorem}[Soundness]
+		If $\vdash A$ (or $\vdash_c A$), then $1\le \lsem A\rsem$ in any Heyting (or Boolean) algebra.
+	\end{theorem}
+	\vspace{-0.2cm}
+	\pause
+	\begin{proof}
+		Show by induction on a derivation $\Gamma\vdash A$ that $\lsem \bigwedge\Gamma\rsem \le \lsem A\rsem$.
+	\end{proof}
+	\pause
+	\begin{corollary}
+		In NJ the formula $A\lor \neg A$ is not derivable.
+	\end{corollary}
+	\vspace{-0.2cm}
+	\pause
+	\begin{proof}
+		Consider the linearly-ordered three-valued Heyting algebra $(0,\star,1)$.
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Completeness}
+	\pause
+	The completeness for algebraic semantics follows from a simple observation:
+	\pause
+	\begin{fact}[Lindenbaum Algebra]
+		The formulas preorderd by $A\vdash B$ (or $A\vdash_c B$) form a Heyting (or Boolean) algebra.
+	\end{fact}
+	\vspace{-0.2cm}
+	\pause
+	\begin{proof}
+		\begin{itemize}
+			\pause
+			\item
+			Reflexivity by Ax rule, transitivity by IE rule, minimality of $\bot$ by Exp.
+			\pause
+			\item
+			The equivalences for $\sqcap$, $\sqcup$ and $\sqsupset$ reduce to simple ND derivations.
+			\qedhere
+		\end{itemize}
+	\end{proof}
+	\pause
+	\begin{corollary}[Completeness]
+		If $1\le \lsem A\rsem$ in any Heyting (or Boolean) algebra, then $\vdash A$ (or $\vdash_c A$).
+	\end{corollary}
+	\vspace{-0.2cm}
+	\pause
+	\begin{proof}
+		In the respective Lindenbaum algebra $1\le \lsem A\rsem$ immediately yields derivability of $A$.
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Complete Algebras}
+	\pause
+	We extend the algebraic semantics to first-order quantifiers:
+	\pause
+	\begin{definition}
+		A Heyting algebra $\AA$ is called \textbf{complete} if it has arbitrary greatest lower bounds
+		$$ \textstyle y\le \bigsqcap S  \text{ if and only if } y\le x \text{ for all } y\in S$$
+		and then $\AA$ also has arbitrary least upper bounds $\bigsqcup S:=\bigsqcap\{x \mid \forall y\in S.\, y\le x\}$.
+	\end{definition}
+	\pause
+	Given a complete Heyting algebra, we can interpret quantifiers in a natural way:
+	$$\textstyle \lsem \forall x A\rsem :=\bigsqcap_t \lsem A[t/x]\rsem \hspace{5em}\lsem \exists x A\rsem :=\bigsqcup_t \lsem A[t/x]\rsem$$
+	
+	\pause
+	\begin{itemize}
+		\item
+		Soundness: show by induction on $\Gamma\vdash A$ that $\lsem \bigwedge\Gamma[\sigma]\rsem \le \lsem A[\sigma]\rsem$
+		\pause
+		\item
+		Completeness: needs more work as the Lindenbaum algebras are not complete
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Mac-Neille Completion}
+	\pause
+	Luckily, there is a general recipe how algebras can be completed!
+	\pause
+	\begin{fact}
+		Every Heyting algebra $\AA$ embeds into a complete Heyting algebra $\overline \AA$.
+	\end{fact}
+	\pause
+	\begin{proof}
+		\begin{enumerate}
+			\pause
+			\item
+			Define $L(S):= \{ x\in \Omega\mid \forall y\in S.\,x\le y\}$ and $U(S):= \{ x\in \Omega\mid \forall y\in S.\,y\le x\}$.
+			\pause
+			\item
+			Consider the set $\overline \Omega:=\{S\subseteq \Omega\mid L(U(S))\subseteq S\}$ ordered by inclusion.
+			\pause
+			\item
+			Equip $\overline A$ with algebraic structure as follows:
+			\begin{align*}
+				\overline 0 &:=\{x\in \Omega\mid x\le 0\}&S\overline\sqcap S'&:=S\cap S' \\
+				S\overline\sqsupset S'&:=\{x\in \Omega\mid \forall y\in S.\,x\sqcup y\in S'\}&S\overline\sqcup S'&:=L(U(S\cup S'))
+			\end{align*}
+			\item
+			\pause
+			Observe that $\overline \Omega$ is complete by using intersection $\bigcap$ (and union $\bigcup$).
+			\pause
+			\item
+			Verify that $\overline x :=\{y\in \Omega\mid y\le x \}$ embeds $\AA$ into $\overline \AA$.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Completeness}
+	\pause
+	\begin{theorem}[Completeness]
+		If $1\le \lsem A\rsem$ in any complete Heyting (or Boolean) algebra, then $\vdash A$ (or $\vdash_c A$).
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\pause
+			\item
+			Assume that $\overline 1\subseteq \lsem A\rsem$ in the completion $\overline \LL$ of the Lindenbaum algebra for $\vdash A$.
+			\pause
+			\item
+			Verify that evaluation in $\overline \LL$ coincides with the embedding of $\LL$: $\lsem A\rsem = \overline{ A}$.
+			\pause
+			\item
+			But then in particular $\overline1 \subseteq \overline{A}$ and hence $1\le A$, meaning $\vdash A$.
+			\pause
+			\item
+			To cover $\vdash_c A$, observe that the completion of Boolean algebras is Boolean.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+	
+	\pause
+	\vspace{0.3cm}
+	Note that all algebraic completeness proofs as presented here are constructive!
+\end{frame}
+
+\begin{frame}{Heyting Arithmetic and Peano Arithmetic}
+	\pause
+	In the language of arithmetics $(0,S,+,\cdot)$ with equality consider the following axioms
+	\begin{align*}
+		x+0&=x & x+ (S y)&= S(x + y)\\
+		x\cdot 0&= 0 & x \cdot (Sy) &= x+ x\cdot y\\
+		0&\not= Sx & x &= y \text{ whenever } Sx = Sy
+	\end{align*}
+	as well as the following axiom scheme for every formula A:
+	$$A(0) \to (\forall x A(x) \to A (Sx)) \to \forall x A(x)$$
+	\pause
+	\begin{definition}
+		Heyting arithmetic (HA) consists of the above axioms and is based on the system NJ, Peano arithmetic (PA) consists of the same axioms but is based on NK.
+	\end{definition}
+\end{frame}
+
+\begin{frame}{The Standard Model}
+	\pause
+	\begin{definition}
+		We refer to the set $\mathbb N$ of natural numbers equipped with the arithmetical operations as the \textbf{standard model} of HA and PA.
+	\end{definition}
+	
+	\pause
+	\begin{fact}
+		$\mathbb N$ satisfies all axioms of HA, so whenever $HA\vdash A$ also $\mathbb N\vDash A$.
+	\end{fact}
+	
+	\pause
+	\vspace{0.3cm}
+	Due to the compactness theorem, there are also many non-standard models:
+	\begin{enumerate}
+		\pause
+		\item
+		Extend the language with a constant $c$ and consider axioms $\overline n\le c$ for all $n\in \mathbb N$.
+		\pause
+		\item
+		Every finite set $\Gamma$ of these axioms is satisfied by $\mathbb N$ by choosing $c$ large enough.
+		\pause
+		\item
+		Then by compactness there is a model $\MM$ satisfying all these axioms at once.
+		\pause
+		\item
+		Observe that $\MM$ differs from $\mathbb N$ as $c$ in is larger than every standard number $\overline n$.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Meta-Theoretic Properties}
+	\pause
+	Some standard (but potentially confusing) meta-theoretic results are:
+	\begin{itemize}
+		\pause
+		\item
+		Completeness: if $\MM\vDash A$ for all models $\MM$ of PA, then $PA\vdash_c A$
+		\pause
+		\item
+		Incompleteness 1: if $\mathbb N \vDash A$, then not necessarily $PA\vdash_c A$
+		\pause
+		\item
+		Incompleteness $1'$: there are sentences A with neither $PA\vdash_c A$ nor $PA\vdash_c \neg A$
+		\pause
+		\item
+		Incompleteness 2: $PA\not\vdash_c Con(PA)$ expressing consistency of PA
+	\end{itemize}
+	
+	\pause
+	\vspace{0.5cm}
+	Constructively, there are some even more interesting phenomena:
+	\begin{itemize}
+		\pause
+		\item
+		$\mathbb N$ is the only model of HA, a consequence of Tennenbaum's theorem
+		\pause
+		\item
+		PA does not have a model at all, while it is still provably consistent
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Friedman's A-Translation: Definition}
+	\pause
+	Observe that the double-negation translation $A^*$ can be verified in minimal logic:
+	$$\vdash_c A\hspace{3em}\text{ if and only if }\hspace{3em}\vdash_m A^{*}$$
+	
+	\pause
+	Therefore we can generalise the translation to an arbitrary formula $A_\bot$
+	\begin{align*}
+		P^{A_\bot} &:= \sim\sim \!\! P & (A\lor B)^{A_\bot} &:=\sim\sim \!\! (A^{A_\bot}\lor B^{A_\bot})\\
+		(A\to B)^{A_\bot} &:= A^{A_\bot}\to B^{A_\bot} & (\forall x A)^{A_\bot} &:=\forall  x A^{A_\bot}\\
+		(A\land B)^{A_\bot} &:=A^{A_\bot}\land B^{A_\bot} & (\exists x A)^{A_\bot} & := \sim\sim \!\! \exists x A^{A_\bot}
+	\end{align*}
+	where $\sim \!\! A$ is a shorthand for $A\to A_\bot$.
+		
+	\pause
+	\vspace{0.3cm}
+	\pause
+	\begin{theorem}[Friedman]
+		For arbitrary $A$ and $A_\bot$, we have that $\vdash_c A$ implies $\vdash_m A^{A_\bot}$.
+	\end{theorem}
+\end{frame}
+
+\begin{frame}{Friedman's A-Translation: Proof Outline}
+	\begin{enumerate}
+		\pause
+		\item
+		Double-negation elimination holds for translated formulas: $\vdash_m \sim\sim\!\! A^{A_\bot}\to A^{A_\bot}$
+		\begin{itemize}
+			\pause
+			\item
+			By induction on $A$, exploiting that minimal logic identifies $\sim\sim\sim\!\! B$ and $\sim\!\! B$
+		\end{itemize}
+		\vspace{0.7cm}
+		\pause
+		\item
+		Derivations can be replayed in the translation: $\Gamma\vdash_c A$ implies $\Gamma^{A_\bot}\vdash_m A^{A_\bot}$
+		\begin{itemize}
+			\pause
+			\item
+			By induction on $\Gamma\vdash_c A$, using (1) whenever negative reasoning is needed
+		\end{itemize}
+	\end{enumerate}
+	
+	\pause
+	\vspace{0.9cm}
+	Note however that it is \textbf{not} the case that classically $A$ and $A^{A_\bot}$ are always equivalent:\\
+	\pause
+	If we choose ${A_\bot}:=\top$ then we have $\vdash_c \bot^{A_\bot}$ but not $\vdash_c \bot$!
+\end{frame}
+
+\begin{frame}{Partial Conservativity Results}
+	\pause
+	The A-Translation can be used to show that some derivations of PA work also in HA!
+	
+	\pause
+	\begin{theorem}
+		Let $t(x)$ be given and assume $HA\vdash \neg \neg \exists x \, t(x)= 0$.
+		Then $HA\vdash \exists x\, t(x)= 0$.
+	\end{theorem}
+	\pause
+	\vspace{-0.3cm}
+	\begin{proof}
+		\begin{enumerate}
+			\pause
+			\item
+			$HA\vdash \neg \neg \exists x \, t(x)= 0$ in particular $PA\vdash_c \exists x \, t(x)= 0$.
+			\pause
+			\item
+			Choosing $A_\bot:= \exists x \, t(x)= 0$, we have $PA^{A_\bot}\vdash (\exists x \, t(x)= 0)^{A_\bot}$.
+			\pause
+			\item
+			We can derive $HA\vdash PA^{A_\bot}$, so we have $HA\vdash (\exists x \, t(x)= 0)^{A_\bot}$.
+			\pause
+			\item
+			From this we can derive $HA\vdash \exists x\, t(x)= 0$ as desired.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+	
+	\pause
+	\vspace{0.5cm}
+	More generally for sentences $A$ of the form $\forall x \exists y\,B(x,y)$ with $B$ quantifier-free:
+	\begin{itemize}
+		\pause
+		\item
+		If A is provable in PA, then A is already provable in HA
+		\pause
+		\item
+		If A is provable in ZF, then A is provable in IZF (intuitionistic Zermelo-Fraenkel)
+	\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}
+
+%\begin{frame}{Bibliography}
+%%\begin{frame}{Bibliography}
+%\footnotesize
+%\bibliographystyle{apalike}
+%\bibliography{../biblio}
+%\end{frame}
+
+\appendix
+
+
+
+
+
+
+
+
+
+\end{document}

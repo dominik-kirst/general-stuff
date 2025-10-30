@@ -1,0 +1,134 @@
+\documentclass{article}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\renewcommand{\to}{\Rightarrow}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\UU}{\mathcal U}
+
+\newtheorem{exercise}{Exercise}
+
+\begin{document}
+
+\title{Natural Deduction}
+\author{Dominik Kirst}
+
+\date{LMFI Proof Theory Course\\October 17th, 2025}
+
+\maketitle
+
+\begin{exercise}[ND Derivations]
+	Give derivations for $\vdash \neg (A\Leftrightarrow \neg A))$ and $\vdash_c \neg (\forall x \neg A)\to \exists x A$.
+\end{exercise}
+
+\begin{exercise}[Weakening]
+	Recall the weakening property that $\Delta\vdash A$ whenever $\Gamma\vdash A$ and $\Gamma\subseteq \Delta$.
+	\begin{enumerate}
+		\item
+		Using induction on $\Delta\vdash A$, give the inductive hypothesis for each rule.
+		\item
+		Establish the weakening property for all propositional rules of ND.
+		\item
+		What do you observe in the case of the quantifier rules?
+		\item
+		Establish the renaming property that $\Gamma[y/x]\vdash A[y/x]$ whenever $\Gamma\vdash A$ and $y$ is completely fresh.
+		\item
+		Use the renaming property to finish the weakening proof for the quantifier rules.
+	\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Equivalence of LK and NK]
+	Show that if $\Gamma\vdash \Delta$, then $\Gamma\vdash_c\bigvee\Delta$.
+\end{exercise}
+
+\begin{exercise}[Double-negation Translation]
+	For the translation $A^*$ as defined in the lecture show:
+	\begin{enumerate}
+		\item
+		Show that $\vdash_c A\Leftrightarrow A*$ by induction on $A$.
+		\item
+		Show that $\vdash \neg \neg A^*\to A^*$ by induction on $A$.
+		\item
+		Show that $\Gamma\vdash_c A$ implies $\Gamma^*\vdash A^*$.
+		\item
+		Can you even show that $\Gamma\vdash_c A$ implies $\Gamma^*\vdash_m A^*$?
+	\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Henkin Completeness]
+	Extend the Henkin completeness proof to the full syntax:
+	\begin{enumerate}
+		\item
+		Add respective clauses to the Lindenbaum lemma
+		\item 
+		Prove the extended Lindenbaum lemma. Hint: you do not need to change the construction of $\TT$.
+		\item
+		Derive the extended model existence and completeness theorems.
+		\item
+		How much classical logic did you use on the meta-level?
+	\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Kripke Semantics]
+	Prove the persistence and soundness for full Kripke semantics.
+\end{exercise}
+
+\begin{exercise}[Semantic Cut-Elimination]
+	Consider the universal model $\UU$ over all contexts:
+	\begin{enumerate}
+		\item
+		Relax the definition of Kripke forcing to accommodate inconsistent contexts as worlds of $\UU$.
+		\item
+		Establish semantic cut-elimination, i.e.~prove simultaneously:
+		\begin{enumerate}
+			\item
+			$\UU\Vdash^\Gamma_\sigma A \text{ implies } \Gamma\vdash_{cf}A[\sigma]$
+			\item
+			$\text{If for all $\Delta\supseteq \Gamma$ and $B$ with $\Delta,A[\sigma]\vdash_{cf} B$ we have $\Delta\vdash_{cf} B$, then $\UU\Vdash^\Gamma_\sigma A$} $
+		\end{enumerate}
+	\end{enumerate}
+\end{exercise}
+
+
+\end{document}

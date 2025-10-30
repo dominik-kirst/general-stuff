@@ -1,0 +1,547 @@
+\documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
+\usecolortheme{orchid}
+\setbeamertemplate{footline}[frame number]
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\title[Natural Deduction]{Natural Deduction}
+\author[Dominik Kirst]{Dominik Kirst}
+
+\date[October 7th, 2025]{LMFI Proof Theory Course\\October 7th, 2025}
+
+
+% BOXES
+\usepackage[many]{tcolorbox}
+\newtcolorbox{emptybox}[1][]{
+	beamer,
+	width=(0.7\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widerbox}[1][]{
+	beamer,
+	width=(0.8\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widebox}[1][]{
+	beamer,
+	width=(\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+
+% TIMELINE
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{stackengine}
+\usetikzlibrary{trees, shapes, calc, positioning, shadows}
+
+\definecolor{darkcerulean}{rgb}{0.063661, 0.257392, 0.477463}
+\definecolor{scooter}{rgb}{0.161162, 0.775760, 0.885416}
+
+
+% #1 – box name
+% #2 – left color
+% #3 – right color
+% #4 – Title (may contain #1)
+\newcommand{\newlargebox}[4]{
+	\newtcolorbox{#1}[1][]{
+		beamer,
+		width=\textwidth+7pt,
+		enlarge left by=-3pt,
+		titlerule=3mm,
+		colframe=white,
+		coltitle={#2},
+		bottom=2pt, 
+		top=-4pt,
+		left=6pt,  
+		toptitle=2pt,
+		bottomtitle=-2pt,
+		fonttitle=\bfseries\large,
+		adjusted title={#4},
+		outer arc=.5mm,
+		arc=.5mm,
+		no shadow,
+		fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+		interior titled code={
+			\path [left color = {#2}, right color = {#3}]
+			(title.south west) + (8pt, 0) rectangle ++(\textwidth-1pt, 0.02);
+		}
+	}
+}
+
+
+\newlargebox{defaultbox}{darkcerulean}{scooter}{#1} 
+
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+
+
+\begin{document}
+
+%\beamerdefaultoverlayspecification{<+->}
+\definecolor{red}{RGB}{204,0,0}
+\definecolor{yellow}{RGB}{228,242,31}
+\definecolor{green}{RGB}{0,204,0}
+
+\newcommand\refs[1]{%
+	\begin{textblock*}{8cm}(0.3cm,9.2cm)%
+		\scriptsize {\color{gray}#1}
+	\end{textblock*}
+}
+
+\renewcommand{\to}{\Rightarrow}
+
+\begin{frame}
+	\maketitle
+\end{frame}
+
+\begin{frame}{Slogans}
+	\begin{itemize}
+		\item
+		Deduction system closely resembling natural reasoning
+		\vspace{0.5cm}
+		\item
+		Focus on \emph{introduction} and \emph{elimination} rules
+		\vspace{0.5cm}
+		\item
+		Intuitionistic and classical (and minimal) variants
+		\vspace{0.5cm}
+		\item
+		Interesting completeness proofs
+		\vspace{0.5cm}
+		\item
+		Connection to algebraic / computational / categorical semantics
+		\vspace{0.5cm}
+		\item
+		Originally developed by Gentzen in the context of consistency proofs
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+	Lecture 1:
+	\begin{itemize}
+		\item
+		Intuitionistic and classical natural deduction
+		\item
+		Structural properties
+		\item
+		Equivalence to sequent calculus
+		\item
+		Double-negation translation
+	\end{itemize}
+	
+	\vspace{0.2cm}
+	Lecture 2:
+	\begin{itemize}
+		\item
+		Henkin's completeness proof
+		\item
+		Kripke semantics
+		\item
+		Semantic cut-elimination
+	\end{itemize}
+	
+	\vspace{0.2cm}
+	Lecture 3:
+	\begin{itemize}
+		\item
+		Algebraic semantics
+		\item
+		Friedman translation
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Intuitionistic Natural Deduction (NJ)}
+	\begin{gather*}
+		\inference[Ax]{A\in \Gamma}{\Gamma\vdash A}\hspace{2em}
+		\inference[Exp]{\Gamma\vdash\bot}{\Gamma\vdash A}\hspace{2em}
+		\inference[II]{\Gamma,A\vdash B}{\Gamma\vdash A\to B}\hspace{2em}
+		\inference[IE]{\Gamma\vdash A\to B& \Gamma \vdash A}{\Gamma \vdash B}\\[0,5cm]
+		\inference[CI]{\Gamma\vdash A&\Gamma\vdash B}{\Gamma \vdash A\land B}\hspace{2em}
+		\inference[CE1]{\Gamma\vdash A\land B}{\Gamma \vdash A}\hspace{2em}
+		\inference[CE2]{\Gamma\vdash A\land B}{\Gamma \vdash B}\\[0,5cm]
+		\inference[DI1]{\Gamma\vdash A}{\Gamma\vdash A\lor B}\hspace{2em}
+		\inference[DI2]{\Gamma\vdash B}{\Gamma\vdash A\lor B}\hspace{2em}
+		\inference[OE]{\Gamma\vdash A\lor B&\Gamma,A\vdash C&\Gamma,B\vdash C}{\Gamma \vdash C}\\[0,5cm]
+		\inference[AI]{\Gamma \vdash A & x\not\in FV(\Gamma)}{\Gamma\vdash \forall x A}\hspace{2em}
+		\inference[AE]{\Gamma\vdash \forall x A}{\Gamma\vdash A[t/x]}\\[0,5cm]
+		\inference[EI]{\Gamma\vdash A[t/x]}{\Gamma\vdash \exists x A}\hspace{2em}
+		\inference[EE]{\Gamma\vdash \exists x A&\Gamma,A\vdash B&x\not\in FV(\Gamma,B)}{\Gamma\vdash B}
+	\end{gather*}
+\end{frame}
+
+\begin{frame}{Classical Natural Deduction (NK)}
+	To obtain a classical system $\Gamma\vdash_c A$ replace the Exp rule by
+	$$\inference[DN]{\Gamma,\neg A\vdash_c\bot}{\Gamma\vdash_c A}$$
+	where here we treat $\neg A$ as a shorthand for $A\to \bot$.
+	
+	\pause
+	
+	\vspace{0.5cm}
+	We will establish a few expected properties:
+	\begin{itemize}
+		\item
+		If $\Gamma\vdash A$ then $\Gamma\vdash_c A$.
+		\item
+		We always have $\Gamma\vdash_c A\lor\neg A$.
+		\item
+		We don't always have $\Gamma\vdash A\lor\neg A$.
+	\end{itemize}
+	
+	\pause
+	
+	\vspace{0.5cm}
+	There is also a minimal system $\Gamma \vdash_m A$ dropping Exp without replacement:
+	\begin{itemize}
+		\item
+		Obviously, if $\Gamma\vdash_m A$ then $\Gamma\vdash A$ and $\Gamma\vdash_c A$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example Derivation: Excluded Middle}
+	\pause
+	$$
+	\infer{\vdash_c A\lor\neg A}{
+	\infer{\neg( A\lor \neg A)\vdash\bot}{
+	\infer{\neg( A\lor \neg A)\vdash (A\lor \neg A)\to \bot}{} &
+	\infer{\neg( A\lor \neg A)\vdash A\lor \neg A}{
+	\infer{\neg( A\lor \neg A)\vdash \neg A}{
+	\infer{\neg( A\lor \neg A),A\vdash \bot}{
+	\infer{\neg( A\lor \neg A),A\vdash (A\lor \neg A)\to \bot}{} &
+	\infer{\neg( A\lor \neg A),A\vdash A\lor\neg A}{
+	\infer{\neg( A\lor \neg A),A\vdash A}{}
+	}}}}}}
+	$$
+	
+	\pause
+	\vspace{0.5cm}
+	Note that already $\neg( A\lor \neg A)\vdash_m \bot$ holds!
+\end{frame}
+
+\begin{frame}{Example Derivation: Dual Drinker Paradox}
+	$$
+	\scriptsize
+	\infer{\vdash_c \exists x(\exists yA(y)\to A(x))}{
+	\infer{\vdash_c \exists z A(z)\lor\neg \exists z A(z)}{\text{previous slide}} &
+	\infer{\exists z A(z) \vdash_c DD}{
+	\infer{\exists z A(z) \vdash_c\exists z A(z) }{} &
+	\infer{\exists z A(z), A(z)\vdash_c DD}{
+	\infer{\exists z A(z), A(z)\vdash_c \exists yA(y)\to A(z)}{
+	\infer{\exists z A(z), A(z), \exists yA(y) \vdash_c A(z)}{}
+	}
+	}
+	}
+	&
+	\infer{\neg\exists z A(z) \vdash_c DD}{
+	\infer{\neg\exists z A(z)\vdash_c \exists yA(y)\to A(u)}{
+	\infer{\neg\exists z A(z),\exists z A(z)\vdash_c A(u)}{
+	\infer{\neg\exists z A(z),\exists z A(z),\neg A(u)\vdash_c \bot}{
+	\infer{\Gamma \vdash_c \exists z A(z) \to \bot}{} & \infer{\Gamma \vdash_c\exists z A(z) }{}
+	}
+	}
+	}
+	}
+	}
+	$$
+	
+	\vspace{0.5cm}
+	Here $u$ is some term, $\Gamma$ is $\neg\exists z A(z),\exists z A(z),\neg A(u)$ and $DD$ is $\exists x(\exists yA(y)\to A(x))$.
+\end{frame}
+
+\begin{frame}{Structural Properties}
+	Recall the structural properties we had for sequent calculus:
+	\begin{itemize}
+		\item
+		Contraction: if $\Gamma,A,A\vdash \Delta$ then $\Gamma,A\vdash \Delta$
+		\item
+		Exchange: if $\Gamma,A,B\vdash\Delta$ then $\Gamma,B,A\vdash\Delta$
+		\item
+		Weakening: if $\Gamma\vdash\Delta$ then $\Gamma,A\vdash \Delta$
+	\end{itemize}
+	
+	\pause
+	
+	\vspace{0.5cm}
+	In our formulation of ND based on sets, they all follow from weakening:
+	\vspace{0.5cm}
+	\begin{lemma}
+		If $\Gamma\vdash A$ and $\Gamma\subseteq \Delta$, then $\Delta\vdash A$.
+	\end{lemma}
+	\pause
+	\begin{proof}[Proof strategy]
+		Straightforward induction on $\Gamma\vdash A$ for the propositional rules but surprisingly tricky for the quantifier rules due to freshness conditions.
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Direct Consequences of Weakening}
+	\begin{itemize}
+		\pause
+		\item
+		The Exp rule is admissible in NK, so NK subsumes NJ:
+		$$
+		\infer{\Gamma\vdash_c A}{
+		\infer{\Gamma,\neg A \vdash_c \bot}{\Gamma \vdash_c \bot}
+		}
+		$$
+		\vspace{0.3cm}
+		\pause
+		\item
+		The II rule is invertible:
+		$$
+		\infer{\Gamma,A\vdash B}{
+		\infer{\Gamma,A\vdash A\to B}{\Gamma\vdash A\to B}
+		&
+		\infer{\Gamma,A\vdash A}{}
+		}
+		$$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Equivalence of LJ and NJ}
+	\begin{theorem}
+		If $\Gamma\vdash \Xi$ is derivable in LJ, then $\Gamma\vdash \bigvee \Xi$ is derivable in NJ.
+	\end{theorem}
+	\pause
+	\begin{proof}[Proof strategy]
+		By induction on the derivation of $\Gamma\vdash \Xi$, boiling down to showing all rules of LJ admissible in NJ.
+	\end{proof}
+	
+	\pause
+	\vspace{0.5cm}
+	Since we already argued the converse, we obtain:
+	\begin{itemize}
+		\item
+		NJ is consistent
+		\item
+		Propositional NJ is decidable
+		\item
+		NJ has the disjunction and witness properties
+		\item
+		Completeness results for LJ apply to NJ
+		%\item
+		%More subtle: NJ has cut-elimination
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Equivalence to LJ and NJ: Interesting Cases}
+	The non-trivial rules to show admissible are:
+	
+	\begin{gather*}
+		\inference[cut]{\Gamma_1\vdash A & \Gamma_2,A\vdash B}{\Gamma_1,\Gamma_2\vdash B}\hspace{2em}
+		\inference[RW]{\Gamma\vdash\bot}{\Gamma\vdash A}\\[0,5cm]
+		\inference[L$\neg$]{\Gamma \vdash A}{\Gamma,\neg A\vdash \bot}\hspace{2em}
+		\inference[L$\to$]{\Gamma_1\vdash A & \Gamma_2,B\vdash C}{\Gamma_1,\Gamma_2,A\to B\vdash C}\\[0,5cm]
+		\inference[L$\land$1]{\Gamma,A\vdash C}{\Gamma,A\land B\vdash C}\hspace{2em}
+		\inference[L$\land$2]{\Gamma,B\vdash C}{\Gamma,A\land B\vdash C}\hspace{2em}
+		\inference[L$\lor$]{\Gamma,A\vdash C & \Gamma,B\vdash C}{\Gamma, A\lor B\vdash C}\\[0,5cm]
+		\inference[L$\forall$]{\Gamma,A[t/x]\vdash B}{\Gamma,\forall x A\vdash B}\hspace{2em}
+		\inference[L$\exists$]{\Gamma, A\vdash C & x\not\in FV(\Gamma,C)}{\Gamma,\exists x A\vdash C}
+	\end{gather*}
+\end{frame}
+
+\begin{frame}{Equivalence of LK and NK}
+	\begin{theorem}
+		If $\Gamma\vdash \Delta$ is derivable in LK, then $\Gamma\vdash \bigvee \Delta$ is derivable in NK.
+	\end{theorem}
+	\pause
+	\begin{proof}[Proof strategy]
+		By induction on the derivation of $\Gamma\vdash \Delta$, boiling down to showing all rules of LK admissible in NK.
+	\end{proof}
+	
+	\pause
+	\vspace{0.5cm}
+	Since we already argued the converse, we obtain:
+	\begin{itemize}
+		\item
+		NK is consistent
+		\item
+		Propositional NK is decidable
+		\item
+		Completeness results for LK apply to NK
+		%\item
+		%More subtle: NJ has cut-elimination
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Double-Negation Translation}
+	In propositional logic, the relation of classical and intuitionistic flavour is simple:
+	\begin{theorem}[Glivenko]
+		If $A$ is propositional, then $\vdash_c A$ if and only if $\vdash \neg\neg A$.
+	\end{theorem}
+	
+	\pause
+	\vspace{0.3cm}
+	In first-order logic, the situation is slightly more subtle, for instance define:
+	\begin{align*}
+		P^* &:= \neg\neg P & (A\lor B)^* &:=\neg\neg (A^*\lor B^*)\\
+		(A\to B)^* &:= A^*\to B^* & (\forall x A)^* &:=\forall  x A^*\\
+		(A\land B)^* &:=A^*\land B^* & (\exists x A)^* & := \neg\neg \exists x A^*
+	\end{align*}
+	
+	\pause
+	\begin{theorem}[Gödel-Gentzen]
+		For arbitrary $A$, we have $\vdash_c A$ if and only if $\vdash A^*$.
+	\end{theorem}
+	\vspace{0.3cm}
+	\pause
+	Consequences: relative consistency/decidability, extraction of computational content...
+\end{frame}
+
+\begin{frame}{Double-Negation Translation: Proof Outline}
+	\begin{enumerate}
+		\pause
+		\item
+		Classically, $A$ and $A^*$ are equivalent: $\vdash_c A\Leftrightarrow A^*$
+		\begin{itemize}
+			\pause
+			\item
+			Straightforward, exploiting that classical logic identifies $B$ and $\neg\neg B$
+		\end{itemize}
+		\vspace{0.7cm}
+		\pause
+		\item
+		Double-negation elimination holds for translated formulas: $\vdash \neg\neg A^*\to A^*$
+		\begin{itemize}
+			\pause
+			\item
+			By induction on $A$, exploiting that intuitionistic logic identifies $\neg B$ and $\neg\neg\neg B$
+		\end{itemize}
+		\vspace{0.7cm}
+		\pause
+		\item
+		Derivations in contexts can be replayed in the translation: $\Gamma\vdash_c A$ implies $\Gamma^*\vdash A^*$
+		\begin{itemize}
+			\pause
+			\item
+			By induction on $\Gamma\vdash_c A$, using (2) whenever negative reasoning is needed
+		\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Double-Negation Translation: Some Interesting Cases}
+	The most interesting cases are disjunction and existential elimination:
+	\vspace{0.7cm}
+	\begin{gather*}
+		\inference{\Gamma^*\vdash \neg\neg (A^*\lor B^*) & \Gamma^*,A^*\vdash C^* & \Gamma^*,B^*\vdash C^*}
+		{\Gamma^*\vdash C^*}\\[0.7cm]
+		\inference{\Gamma^*\vdash \neg\neg\exists xA^* & \Gamma^*,A^*\vdash B^* & x\notin FV(\Gamma^*,B^*)}
+		{\Gamma^*\vdash C^*}
+	\end{gather*}
+\end{frame}
+
+
+\end{document}
+
+
+
+\begin{frame}{Henkin's Completeness Proof}
+	content
+\end{frame}
+
+\begin{frame}{Henkin's Completeness Proof: Some Cases}
+	content
+\end{frame}
+
+
+
+%\begin{frame}{Bibliography}
+%%\begin{frame}{Bibliography}
+%\footnotesize
+%\bibliographystyle{apalike}
+%\bibliography{../biblio}
+%\end{frame}
+
+\appendix
+
+
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,611 @@
+\documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
+\usecolortheme{orchid}
+\setbeamertemplate{footline}[frame number]
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\renewcommand{\to}{\Rightarrow}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\UU}{\mathcal U}
+
+\usepackage{dsfont}
+
+\title[Natural Deduction 2]{Natural Deduction 2}
+\author[Dominik Kirst]{Dominik Kirst}
+
+\date[October 14th, 2025]{LMFI Proof Theory Course\\October 14th, 2025}
+
+
+% BOXES
+\usepackage[many]{tcolorbox}
+\newtcolorbox{emptybox}[1][]{
+	beamer,
+	width=(0.7\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widerbox}[1][]{
+	beamer,
+	width=(0.8\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widebox}[1][]{
+	beamer,
+	width=(\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+
+% TIMELINE
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{stackengine}
+\usetikzlibrary{trees, shapes, calc, positioning, shadows}
+
+\definecolor{darkcerulean}{rgb}{0.063661, 0.257392, 0.477463}
+\definecolor{scooter}{rgb}{0.161162, 0.775760, 0.885416}
+
+
+% #1 – box name
+% #2 – left color
+% #3 – right color
+% #4 – Title (may contain #1)
+\newcommand{\newlargebox}[4]{
+	\newtcolorbox{#1}[1][]{
+		beamer,
+		width=\textwidth+7pt,
+		enlarge left by=-3pt,
+		titlerule=3mm,
+		colframe=white,
+		coltitle={#2},
+		bottom=2pt, 
+		top=-4pt,
+		left=6pt,  
+		toptitle=2pt,
+		bottomtitle=-2pt,
+		fonttitle=\bfseries\large,
+		adjusted title={#4},
+		outer arc=.5mm,
+		arc=.5mm,
+		no shadow,
+		fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+		interior titled code={
+			\path [left color = {#2}, right color = {#3}]
+			(title.south west) + (8pt, 0) rectangle ++(\textwidth-1pt, 0.02);
+		}
+	}
+}
+
+
+\newlargebox{defaultbox}{darkcerulean}{scooter}{#1} 
+
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+
+
+\begin{document}
+
+%\beamerdefaultoverlayspecification{<+->}
+\definecolor{red}{RGB}{204,0,0}
+\definecolor{yellow}{RGB}{228,242,31}
+\definecolor{green}{RGB}{0,204,0}
+
+\newcommand\refs[1]{%
+	\begin{textblock*}{8cm}(0.3cm,9.2cm)%
+		\scriptsize {\color{gray}#1}
+	\end{textblock*}
+}
+
+\begin{frame}
+	\maketitle
+\end{frame}
+
+
+\begin{frame}{Recap}
+	Last week, we studied natural deduction systems:
+	\begin{itemize}
+		\vspace{0.3cm}
+		\item
+		Intuitionistic, classical and minimal versions
+		\vspace{0.3cm}
+		\item
+		Structural properties like admissible weakening: $\Gamma\vdash A$ with $\Gamma\subseteq \Delta$ implies $\Delta \vdash A$
+		\vspace{0.3cm}
+		\item
+		Equivalence to sequent calculus: $\Gamma\vdash \Xi$ implies $\Gamma \vdash \bigvee \Xi$
+		\vspace{0.3cm}
+		\item
+		Double-negation translation: $\Gamma\vdash_c A$ if and only if $\Gamma^*\vdash A^*$
+	\end{itemize}
+	\vspace{0.3cm}
+	All these results were syntactic, today we take a more semantic perspective!
+\end{frame}
+
+\begin{frame}{Plan for Today}
+	\begin{itemize}
+		\item 
+		Henkin's completeness proof:
+		\begin{itemize}
+			\item
+			Sketch of the usual proof
+			\item
+			Constructive refinement
+		\end{itemize}
+		\vspace{0.3cm}
+		\item
+		Kripke semantics:
+		\begin{itemize}
+			\item
+			Version for the full syntax
+			\item
+			Version for the negative fragment
+		\end{itemize}
+		\vspace{0.3cm}
+		\item
+		Kripke completeness:
+		\begin{itemize}
+			\item
+			Sketch of the usual proof
+			\item
+			Semantic cut-elimination
+		\end{itemize}
+	\end{itemize}
+	
+	\vspace{0.5cm}
+	Mostly based on this paper:\\ \scriptsize \url{https://www.ps.uni-saarland.de/Publications/documents/ForsterEtAl_2021_Completeness.pdf}
+\end{frame}
+
+\begin{frame}{Henkin Completeness Proof: Blueprint}
+	\begin{theorem}
+		For every sentence $A$, if $\vDash A$ then $\vdash_c A$.
+	\end{theorem}
+	\pause
+	\begin{proof}[Outline]
+		\begin{enumerate}
+			\pause
+			\item
+			Assume $\vDash A$ but suppose $\not\vdash_c A$, so in particular $\neg A \not\vdash_c \bot$.
+			\pause
+			\item
+			Extend $\{\neg A\}$ into maximal complete theory $\TT$ (Lindenbaum Lemma).
+			\pause
+			\item
+			Give $\TT$ the structure of a syntactic model $\MM_\TT$.
+			\pause
+			\item
+			Establish that $B\in \TT$ exactly if $\MM_\TT\vDash B$ (Truth Lemma).
+			\pause
+			\item
+			Conclude that the contradiction that $\{\neg A\}$ has a model (Model Existence).
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+	
+	\pause
+	We go through these steps in detail, focusing on the negative $(\bot,\to,\forall)$-fragment.
+\end{frame}
+
+\begin{frame}{Henkin Completeness Proof: Model Existence}
+	\begin{lemma}[Lindenbaum]
+		For every consistent set $\Gamma$ of sentences there is a consistent theory $\TT\supseteq \Gamma$ with:
+		\begin{itemize}
+			\item
+			$A\to B\in \TT$ if and only if $A\in \TT$ implies $B\in \TT$
+			\item
+			$\forall x A\in \TT$ if and only if for all terms $t$ we have $A[t/x]\in \TT$
+		\end{itemize}
+	\end{lemma}
+	
+	\pause
+	\begin{theorem}
+		For every consistent set $\Gamma$ of sentences there is a model $\MM$ with $\MM\vDash \Gamma$.
+	\end{theorem}
+	\pause
+	\vspace{-0.2cm}
+	\begin{proof}
+		\begin{enumerate}
+			\pause
+			\item
+			Use the Lindenbaum Lemma to obtain $\TT\supseteq \Gamma$ as above.
+			\pause
+			\item
+			Define the model $\MM_\TT$ over the domain of (open) terms by:
+			$$f^{\MM_\TT}(t_1,\dots ,t_k):=f(t_1,\dots ,t_k)
+			\hspace{3em}
+			P^{\MM_\TT}(t_1,\dots ,t_k):=P(t_1,\dots ,t_k)\in \TT
+			$$
+			\item
+			\pause
+			Establish $A[\sigma]\in \TT$ exactly if $\MM_\TT\vDash_\sigma A$, so in particular $\MM_\TT\vDash \Gamma$.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Henkin Completeness Proof: Lindenbaum Lemma}
+	\begin{lemma}[Lindenbaum]
+		For every consistent set $\Gamma$ of sentences there is a consistent theory $\TT\supseteq \Gamma$ with:
+		\begin{itemize}
+			\item
+			$A\to B\in \TT$ if and only if $A\in \TT$ implies $B\in \TT$
+			\item
+			$\forall x A\in \TT$ if and only if for all terms $t$ we have $A[t/x]\in \TT$
+		\end{itemize}
+	\end{lemma}
+	
+	\pause
+	\begin{proof}
+		\pause
+		Using an enumeration of formulas such that $x_n$ is fresh for all $A_m$ with $m\le n$ we define:
+		$$\textstyle \TT_0 := \Gamma \cup \{A(x_n){\to} \forall xA_n(x)\mid n\in \mathbb{N}\}
+		\hspace{1.5em}
+		\TT_{n+1}:= \TT_n\cup \{A_n \mid \TT_n,A\not\vdash\bot \}
+		\hspace{1.5em}
+		\TT :=\bigcup_{n\in \mathbb{N}} \TT_n
+		$$
+		\vspace{-0.5cm}
+		\begin{enumerate}
+			\pause
+			\item
+			Adding Henkin axioms for $\TT_0$ maintains consistency by use of the Drinker Paradox.
+			\item
+			Each iteration step for $\TT_{n+1}$ maintains consistency.
+			\pause
+			\item
+			The limit $\TT$ is maximal and thus deductively closed.
+			\pause
+			\item
+			The wished properties follow by deductive closure and the Henkin axioms.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Henkin Completeness Proof: Minimal Refinement}
+	Note that for the completeness result all steps but the very first were constructive!
+	\pause
+	
+	If we now further restrict to the $(\to,\forall)$-fragment, something interesting happens:
+	\pause
+	\begin{lemma}[Lindenbaum]
+		For every set $\Gamma$ of sentences and every sentence $A_\bot$ there is a theory $\TT\supseteq \Gamma_\bot$ with:
+		\begin{itemize}
+			\item
+			$A_\bot \in \TT$ if and only if $\Gamma\vdash_c A_\bot$
+			\item
+			$A\to B\in \TT$ if and only if $A\in \TT$ implies $B\in \TT$
+			\item
+			$\forall x A\in \TT$ if and only if for all terms $t$ we have $A[t/x]\in \TT$
+		\end{itemize}
+	\end{lemma}
+		
+		\pause
+		\begin{proof}
+			\pause
+			Similar as before, extending $\textstyle \TT_0 := \Gamma\cup \{A_\bot{\to} A_n\mid n\in \mathbb N \} \cup \{A(x_n){\to} \forall xA_n(x)\mid n\in \mathbb{N}\}$.\\
+			For consistency, note that $\Gamma, A_\bot{\to} A_n\vdash_c A_\bot$ implies $\Gamma\vdash_c A_\bot$ (Peirce's Law).
+		\end{proof}
+		
+	\pause
+	\vspace{0.3cm}
+	So the induced model $\MM_\TT$ of $\Gamma$ satisfies that $\MM_\TT\vDash A_\bot$ implies $\Gamma\vdash_c A_\bot$.\\
+	\pause
+	$\Rightarrow$ From this, the completeness theorem follows constructively!
+\end{frame}
+
+\begin{frame}{Henkin Completeness Proof: Constructive Refinement}
+	The previous proof does not extend to the $(\bot,\to,\forall)$-fragment:
+	If $A_\bot$ is provable, then $\TT$ contains all formulas, including contradictions and hence doesn't induce a model.
+	
+	\vspace{0.3cm}
+	\pause
+	However, we can relax the notion of model to accommodate this additional case:
+	\pause
+	\begin{definition}
+		We relativise the satisfaction relation to an arbitrary proposition $P$ via $\MM \vDash^P_\alpha \bot:= P$ and call $\MM$ exploding if for some choice of $P$ we have $\MM\vDash^P_\alpha \bot \to A$ for all $A$.
+	\end{definition}
+	
+	\vspace{0.3cm}
+	\pause
+	Then completeness can be derived similar to the minimal case:
+	\begin{theorem}
+		For every sentence $A$, if $A$ is valid in every exploding model then $\vdash_c A$.
+	\end{theorem}
+	\pause
+	\begin{proof}
+		Obtain $\TT$ as before and observe that $\MM_\TT$ is exploding for the choice $P:=(\vdash_c A)$.
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Kripke Semantics}
+	\pause
+	A standard semantics of intuitionistic logic is given by Kripke models:
+	\pause
+	\begin{definition}
+		A Kripke model $\KK=(W,\preceq, (M_w)_{w\in W})$ consists of the following data:
+		\begin{itemize}
+			\item $(W,\preceq)$ is a pre-order, so reflexive and transitive.
+			\item $(M_w)_{w\in W}$ is a family of models such that whenever $w\preceq w'$ and $x_1,...,x_k\in M_w$:
+			$$\hspace{-0.8cm}x_1,...,x_k\in M_{w'}
+			\hspace{1em}
+			f^{M_{w}}(x_1,...,x_k)=f^{M_{w'}}(x_1,...,x_k)
+			\hspace{1em}
+			P^{M_{w}}(x_1,...,x_k)\rightarrow P^{M_{w'}}(x_1,...,x_k)
+			$$
+		\end{itemize}
+		\pause
+		We define the forcing relation $\KK\Vdash^w_\alpha A$ mostly as in $M_w\vDash_\alpha A$ but with:
+		\begin{align*}
+			\KK\Vdash^w_\alpha A\to B&\text{ iff for for all $w'\succeq w$ we have that $\KK\Vdash^{w'}_\alpha A$ implies $\KK\Vdash^{w'}_\alpha B$}\\
+			\KK\Vdash^w_\alpha \forall x A&\text{ iff for for all $w'\succeq w$ and $a\in M_{w'}$ we have that $\KK\Vdash^{w'}_{\alpha[x:=a]} A$}
+		\end{align*}
+	\end{definition}
+\end{frame}
+
+\begin{frame}{Kripke Semantics: Soundness}
+	\pause
+	\begin{lemma}[Persistence]
+		If $\KK\Vdash^w_\alpha A$ and $w'\succeq w$, then also $\KK\Vdash^{w'}_\alpha A$.
+	\end{lemma}
+	\vspace{-0.2cm}
+	\pause
+	\begin{theorem}
+		If $\Gamma\vdash A$ then $\KK\Vdash^{w}_\alpha \Gamma$ implies $\KK\Vdash^{w}_\alpha A$ for all $w$ and $\alpha$.
+	\end{theorem}
+	\vspace{-0.2cm}
+	\pause
+	\begin{proof}
+		By induction on the derivation of $\Gamma\vdash A$, here are some interesting cases:
+		\pause
+		\begin{itemize}
+			\pause
+			\item
+			For the rule II, we assume that $\KK\Vdash^{w}_\alpha \Gamma$ and show $\KK\Vdash^{w}_\alpha A \to B$, so that for every $w'\succeq w$ we have that $\KK\Vdash^{w'}_\alpha A$ implies $\KK\Vdash^{w'}_\alpha B$.
+			By persistence we hence have $\KK\Vdash^{w'}_\alpha \Gamma,A$ and conclude $\KK\Vdash^{w'}_\alpha B$ by the inductive hypothesis for $w:=w'$.
+			\pause
+			\item
+			For the rule AI, we assume that $\KK\Vdash^{w}_\alpha \Gamma$ and show $\KK\Vdash^{w}_\alpha \forall x A$, so that for every $w'\succeq w$ and $a\in M_{w'}$ we have that $\KK\Vdash^{w'}_{\alpha[x:=a]} A$.
+			Using persistence and $x\not\in FV(\Gamma)$, the first assumption also yields $\KK\Vdash^{w'}_{\alpha[x:=a]} \Gamma$, from which we conclude $\KK\Vdash^{w'}_{\alpha[x:=a]} A$ by the inductive hypothesis for $w:=w'$ and $\alpha := \alpha[x:=a]$.
+			\qedhere
+		\end{itemize}
+	\end{proof}
+\end{frame}
+
+\begin{frame}[fragile]{Kripke Semantics: Applications}
+	\pause
+	We can give a simple Kripke models to argue non-derivabilities:
+	
+	\pause
+	\vspace{0.2cm}
+	$$
+	\begin{tikzcd}[row sep=huge]
+		w_2 \Vdash P &
+		 &
+		w_3 \not\Vdash P
+		\\
+		& w_1\not\Vdash P\arrow[ul]\arrow[ur] &
+	\end{tikzcd}
+	$$
+	\vspace{0.2cm}
+	
+	\pause
+	\begin{itemize}
+		\item
+		For a language with a propositional constant $P$ consider the model depicted
+		\pause
+		\item
+		We have $w_2 \Vdash P$ and $w_3\Vdash \neg P$
+		\pause
+		\item
+		However, we have neither $w_1 \Vdash P$ nor $w_1\Vdash \neg P$, so $w_1\not\Vdash P\lor \neg P$
+		\pause
+		\item
+		Thus $\not\vdash P\lor \neg P$ because otherwise $w_1\not\Vdash P\lor \neg P$ by soundness
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Kripke Semantics: Negative Fragment}
+	\pause
+	To study completeness, we again restrict to the negative $(\bot,\to,\forall)$-fragment.\\
+	\pause
+	This allows us to simplify the semantics in the following way:
+	\vspace{0.3cm}
+	\pause
+	\begin{definition}
+		A constant domain Kripke model $\KK=(W,\preceq, D,(M_w)_{w\in W})$ consists of the following:
+		\begin{itemize}
+			\item $(W,\preceq)$ is a pre-order, so reflexive and transitive.
+			\item $(M_w)_{w\in W}$ is a family of $D$-models such that whenever $w\preceq w'$ and $x_1,...,x_k\in D$:
+			$$
+			f^{M_{w}}(x_1,...,x_k)=f^{M_{w'}}(x_1,...,x_k)
+			\hspace{3em}
+			P^{M_{w}}(x_1,...,x_k)\rightarrow P^{M_{w'}}(x_1,...,x_k)
+			$$
+		\end{itemize}
+		\pause
+		We define the forcing relation $\KK\Vdash^w_\alpha A$ mostly as before but with:
+		\begin{align*}
+			\KK\Vdash^w_\alpha \forall x A&\text{ iff for all $a\in D$ we have that $\KK\Vdash^{w}_{\alpha[x:=a]} A$}
+		\end{align*}
+	\end{definition}
+\end{frame}
+
+\begin{frame}{Kripke Completeness: Blueprint}
+	\begin{theorem}
+		For every sentence $A$, if $\Vdash A$ then $\vdash A$.
+	\end{theorem}
+	\begin{proof}[Outline]
+		\begin{enumerate}
+			\pause
+			\item
+			Assume $\vDash A$ but set out to prove $\vdash A$.
+			\pause
+			\item
+			Consider the pre-order of consistent contexts ordered by inclusion.
+			\pause
+			\item
+			Form the universal model $\UU$ over the constant domain of terms by:
+			$$f^{M_{\Gamma}}(x_1,...,x_k)=f(x_1,...,x_k)\hspace{3em}P^{M_{\Gamma}}(x_1,...,x_k):= \Gamma\vdash P(x_1,...,x_k)$$
+			\item
+			\pause
+			Observe that $\UU\Vdash^\Gamma B$ exactly if $\Gamma \vdash B$ (Truth Lemma).
+			\pause
+			\item
+			By assumption of $\vDash A$ in particular $\UU\Vdash^\emptyset_\sigma A$, so $\vdash A$ follows.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+\end{frame}
+
+\begin{frame}{Kripke Completeness: Truth Lemma}
+	\begin{lemma}[Truth Lemma]
+		In the universal model, we have $\UU\Vdash^\Gamma_\sigma A$ exactly if $\Gamma \vdash A[\sigma]$.
+	\end{lemma}
+	\pause
+	\begin{proof}
+		\pause
+		By induction on $A$, the only really interesting case is $A\to B$ from left to right:
+		\pause
+		\begin{enumerate}
+			\item
+			By IH, we can assume that $\Delta \vdash A[\sigma]$ implies $\Delta\vdash B[\sigma]$ for all consistent $\Delta\supseteq \Gamma$.
+			\item
+			To show $\Gamma \vdash A[\sigma]\to B[\sigma]$, it suffices to show $\Gamma,A[\sigma]\vdash B[\sigma]$.
+			\begin{enumerate}[a.]
+				\item
+				If $\Gamma,A[\sigma]$ is consistent, conclude $\Gamma,A[\sigma]\vdash B[\sigma]$ by the assumption in (1).
+				\item
+				If $\Gamma,A[\sigma]$ is consistent, conclude $\Gamma,A[\sigma]\vdash B[\sigma]$ by the explosion rule.
+				\qedhere
+			\end{enumerate}
+		\end{enumerate}
+	\end{proof}
+	\pause
+	Note that we used classical logic to test whether extension maintains consistency...
+\end{frame}
+
+\begin{frame}{Kripke Completeness: Semantic Cut-Elimination}
+	\pause
+	As in the Henkin completeness proof, we can drop the consistency requirement by relaxing to exploding models, allowing a universal model $\UU$ over all contexts:
+	\begin{itemize}
+		\pause
+		\item
+		Then the truth lemma is constructive as no consistency checks are necessary.
+		\pause
+		\item
+		We then can even do more, writing $\Gamma\vdash_{cf} A$ for cut-free sequent derivations:
+		$$\UU\Vdash^\Gamma_\sigma A \text{ implies } \Gamma\vdash_{cf}A[\sigma]$$
+		can be proven if we simultaneously prove:
+		$$\text{If for all $\Delta\supseteq \Gamma$ and $B$ with $\Delta,A[\sigma]\vdash_{cf} B$ we have $\Delta\vdash_{cf} B$, then $\UU\Vdash^\Gamma_\sigma A$} $$
+		\item
+		\pause
+		So by composition with soundness we in particular obtain $\vdash_{cf} A$ from $\vdash A$, so we eliminated cuts and since the proof is constructive it bears an actual algorithm!
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+\end{document}
+
+%\begin{frame}{Bibliography}
+%%\begin{frame}{Bibliography}
+%\footnotesize
+%\bibliographystyle{apalike}
+%\bibliography{../biblio}
+%\end{frame}
+
+\appendix
+
+
+
+
+
+
+
+
+
+\end{document}
