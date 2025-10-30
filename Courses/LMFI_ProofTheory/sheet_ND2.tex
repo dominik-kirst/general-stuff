@@ -46,6 +46,10 @@
 \newcommand{\MM}{\mathcal{M}}
 \newcommand{\KK}{\mathcal{K}}
 \newcommand{\UU}{\mathcal U}
+\renewcommand{\AA}{\mathcal A}
+\newcommand{\lsem}{[\![}
+\newcommand{\rsem}{]\!]}
+\renewcommand{\LL}{\mathcal{L}}
 
 \newtheorem{exercise}{Exercise}
 
@@ -54,81 +58,41 @@
 \title{Natural Deduction}
 \author{Dominik Kirst}
 
-\date{LMFI Proof Theory Course\\October 17th, 2025}
+\date{LMFI Proof Theory Course\\October 31st, 2025}
 
 \maketitle
 
-\begin{exercise}[ND Derivations]
-	Give derivations for $\vdash \neg (A\Leftrightarrow \neg A))$ and $\vdash_c \neg (\forall x \neg A)\to \exists x A$.
+\begin{exercise}[Heyting and Boolean Algebras]
+	Show that the power set $\mathcal P(X)$ of any set $X$ forms a Heyting algebra by taking the inclusion relation as (partial) order. Is it always Boolean?
 \end{exercise}
 
-\begin{exercise}[Weakening]
-	Recall the weakening property that $\Delta\vdash A$ whenever $\Gamma\vdash A$ and $\Gamma\subseteq \Delta$.
+\begin{exercise}[Lindenbaum Algebra]
+	Show that formulas ordered by $A\vdash_c B$ form a Boolean algebra.
+\end{exercise}
+
+\begin{exercise}[Soundness]
+	Let $\AA$ be an aribtrary Heyting algebra and $V(P)\in \Omega$ a valuation:
 	\begin{enumerate}
 		\item
-		Using induction on $\Delta\vdash A$, give the inductive hypothesis for each rule.
+		Show hat $\Gamma\vdash A$ implies $\lsem \bigwedge\Gamma\rsem \le \lsem A\rsem$ for propositional formulas.
 		\item
-		Establish the weakening property for all propositional rules of ND.
-		\item
-		What do you observe in the case of the quantifier rules?
-		\item
-		Establish the renaming property that $\Gamma[y/x]\vdash A[y/x]$ whenever $\Gamma\vdash A$ and $y$ is completely fresh.
-		\item
-		Use the renaming property to finish the weakening proof for the quantifier rules.
+		Assuming that $\AA$ is complete, show that $\Gamma\vdash A$ implies $\lsem \bigwedge\Gamma[\sigma]\rsem \le \lsem A[\sigma]\rsem$.
 	\end{enumerate}
+	Here, $\sigma=[x_1/t_1,\dots,x_k/t_k]$ is a list of (non-capturing) substitutions $x_i/t_i$.
 \end{exercise}
 
-\begin{exercise}[Equivalence of LK and NK]
-	Show that if $\Gamma\vdash \Delta$, then $\Gamma\vdash_c\bigvee\Delta$.
+\begin{exercise}[Mac-Neille Completion]
+	Show that $\overline \AA$ is a Boolean algebra whenever $\AA$ is such.
 \end{exercise}
 
-\begin{exercise}[Double-negation Translation]
-	For the translation $A^*$ as defined in the lecture show:
-	\begin{enumerate}
-		\item
-		Show that $\vdash_c A\Leftrightarrow A*$ by induction on $A$.
-		\item
-		Show that $\vdash \neg \neg A^*\to A^*$ by induction on $A$.
-		\item
-		Show that $\Gamma\vdash_c A$ implies $\Gamma^*\vdash A^*$.
-		\item
-		Can you even show that $\Gamma\vdash_c A$ implies $\Gamma^*\vdash_m A^*$?
-	\end{enumerate}
+\begin{exercise}[Heyting Arithmetic]
+	Show that Heyting arithmetic has decible equality, i.e.~derive $$HA\vdash \forall x y (x=y \lor x \not = y).$$
 \end{exercise}
 
-\begin{exercise}[Henkin Completeness]
-	Extend the Henkin completeness proof to the full syntax:
-	\begin{enumerate}
-		\item
-		Add respective clauses to the Lindenbaum lemma
-		\item 
-		Prove the extended Lindenbaum lemma. Hint: you do not need to change the construction of $\TT$.
-		\item
-		Derive the extended model existence and completeness theorems.
-		\item
-		How much classical logic did you use on the meta-level?
-	\end{enumerate}
+\begin{exercise}[A-Translation]
+	Assume $PA\vdash_c \forall x \exists y (t(x,y) = 0)$. Show that $HA\vdash \forall x \exists y (t(x,y) = 0)$.
 \end{exercise}
 
-\begin{exercise}[Kripke Semantics]
-	Prove the persistence and soundness for full Kripke semantics.
-\end{exercise}
-
-\begin{exercise}[Semantic Cut-Elimination]
-	Consider the universal model $\UU$ over all contexts:
-	\begin{enumerate}
-		\item
-		Relax the definition of Kripke forcing to accommodate inconsistent contexts as worlds of $\UU$.
-		\item
-		Establish semantic cut-elimination, i.e.~prove simultaneously:
-		\begin{enumerate}
-			\item
-			$\UU\Vdash^\Gamma_\sigma A \text{ implies } \Gamma\vdash_{cf}A[\sigma]$
-			\item
-			$\text{If for all $\Delta\supseteq \Gamma$ and $B$ with $\Delta,A[\sigma]\vdash_{cf} B$ we have $\Delta\vdash_{cf} B$, then $\UU\Vdash^\Gamma_\sigma A$} $
-		\end{enumerate}
-	\end{enumerate}
-\end{exercise}
 
 
 \end{document}
