@@ -1,0 +1,201 @@
+\documentclass{article}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\renewcommand{\to}{\Rightarrow}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\UU}{\mathcal U}
+\renewcommand{\AA}{\mathcal A}
+\newcommand{\lsem}{[\![}
+\newcommand{\rsem}{]\!]}
+\renewcommand{\LL}{\mathcal{L}}
+
+\newtheorem{exercise}{Question}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+
+\title{LMFI – Cours fondamental de logique\\Théorie de la démonstration}
+\author{Part on Natural Deduction}
+
+\date{Dominik Kirst\\Mid-term exam, November 14th, 2025}
+
+\maketitle
+
+\noindent
+This part represents half of the points of the mid-term. In my opinion, it is reasonable to spend around 10min on Qeustion 1, 20min on Question 2, 30min on Question 3 and 30min on Question 4.
+
+\begin{exercise}[ND Derivations]
+	Give derivations for $\vdash \neg\neg\neg A \to \neg A$ and $\vdash_c ((A\to B)\to A) \to A$.
+\end{exercise}
+
+\begin{exercise}[Negative Translation]
+	Recall the double-negation translation $A^*$ of formulas $A$:
+	\begin{align*}
+		P^* &:= \neg\neg P & (A\lor B)^* &:=\neg\neg (A^*\lor B^*)\\
+		(A\to B)^* &:= A^*\to B^* & (\forall x A)^* &:=\forall  x A^*\\
+		(A\land B)^* &:=A^*\land B^* & (\exists x A)^* & := \neg\neg (\exists x A^*)
+	\end{align*}
+	\begin{enumerate}
+		\item
+		Find a formula $A$ such that $\vdash_c A$ but $\not\vdash \neg\neg A$.
+		\item
+		Assuming $\vdash \neg\neg A^* \to A^*$, show that $\Gamma\vdash_c A$ implies $\Gamma^*\vdash A^*$.
+		\item
+		Derive that if HA is consistent, then so is PA.
+	\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Algebraic Semantics]
+	Consider the following complete lattice $\AA$:
+	$$
+	\begin{tikzcd}
+		& 1 &\\
+		& * \arrow[u] &\\
+		a\arrow[ur] & & b\arrow[ul]\\
+		& 0\arrow[ul]\arrow[ur] &
+	\end{tikzcd}
+	$$
+	\begin{enumerate}
+		\item
+		Show that $\AA$ has the structure of a complete Heyting algebra, i.e.~define and verify $x\sqsupset y$.
+		%Simplifying a definition by cases, consider the general cases $x\sqsupset y$ for $x\le y$ and $1\sqsupset x$ first.
+		\item
+		Show that $\AA$ is not Boolean, i.e.~find $x$ such that $1\not\le x\sqcup (x\sqsupset 0)$.
+		\item 
+		Use $\AA$ to show that $\not\vdash \forall x (\neg A\lor \neg \neg A)$ by employing the soundness of NJ for Heyting algebras.
+	\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Kripke Semantics]
+	Use the soundness of NJ for full Kripke semantics to derive...
+	\begin{enumerate}
+		\item
+		the disjunction property, i.e.~assuming $\vdash A\lor B$ show that either $\vdash A$ or $\vdash B$.
+		\item
+		the existence property, i.e.~assuming $\vdash \exists x A$ show that there is $t$ with $\vdash A[t/x]$.
+	\end{enumerate}
+	%For the constructed models, give full detail about how every component is defined.
+\end{exercise}
+
+\appendix
+
+\section{Natural Deduction Systems}
+
+\begin{gather*}
+	\inference[Ax]{A\in \Gamma}{\Gamma\vdash A}\hspace{2em}
+	\inference[Exp]{\Gamma\vdash\bot}{\Gamma\vdash A}\hspace{2em}
+	\inference[II]{\Gamma,A\vdash B}{\Gamma\vdash A\to B}\hspace{2em}
+	\inference[IE]{\Gamma\vdash A\to B& \Gamma \vdash A}{\Gamma \vdash B}\\[0,5cm]
+	\inference[CI]{\Gamma\vdash A&\Gamma\vdash B}{\Gamma \vdash A\land B}\hspace{2em}
+	\inference[CE1]{\Gamma\vdash A\land B}{\Gamma \vdash A}\hspace{2em}
+	\inference[CE2]{\Gamma\vdash A\land B}{\Gamma \vdash B}\\[0,5cm]
+	\inference[DI1]{\Gamma\vdash A}{\Gamma\vdash A\lor B}\hspace{2em}
+	\inference[DI2]{\Gamma\vdash B}{\Gamma\vdash A\lor B}\hspace{2em}
+	\inference[OE]{\Gamma\vdash A\lor B&\Gamma,A\vdash C&\Gamma,B\vdash C}{\Gamma \vdash C}\\[0,5cm]
+	\inference[AI]{\Gamma \vdash A & x\not\in FV(\Gamma)}{\Gamma\vdash \forall x A}\hspace{2em}
+	\inference[AE]{\Gamma\vdash \forall x A}{\Gamma\vdash A[t/x]}\\[0,5cm]
+	\inference[EI]{\Gamma\vdash A[t/x]}{\Gamma\vdash \exists x A}\hspace{2em}
+	\inference[EE]{\Gamma\vdash \exists x A&\Gamma,A\vdash B&x\not\in FV(\Gamma,B)}{\Gamma\vdash B}\hspace{2em}
+	\inference[DN]{\Gamma,\neg A\vdash_c\bot}{\Gamma\vdash_c A}
+\end{gather*}
+
+\section{Kripke Semantics}
+
+\begin{definition}
+	A Kripke model $\KK=(W,\preceq, (M_w)_{w\in W})$ consists of the following data:
+	\begin{itemize}
+		\item $(W,\preceq)$ is a pre-order, so reflexive and transitive.
+		\item $(M_w)_{w\in W}$ is a family of models such that whenever $w\preceq w'$ and $x_1,...,x_k\in M_w$:
+		$$\hspace{-0.8cm}x_1,...,x_k\in M_{w'}
+		\hspace{1em}
+		f^{M_{w}}(x_1,...,x_k)=f^{M_{w'}}(x_1,...,x_k)
+		\hspace{1em}
+		P^{M_{w}}(x_1,...,x_k)\rightarrow P^{M_{w'}}(x_1,...,x_k)
+		$$
+	\end{itemize}
+	
+	We define the forcing relation $\KK\Vdash^w_\alpha A$ mostly as in $M_w\vDash_\alpha A$ but with:
+	\begin{align*}
+		\KK\Vdash^w_\alpha A\to B&\text{ iff for for all $w'\succeq w$ we have that $\KK\Vdash^{w'}_\alpha A$ implies $\KK\Vdash^{w'}_\alpha B$}\\
+		\KK\Vdash^w_\alpha \forall x A&\text{ iff for for all $w'\succeq w$ and $a\in M_{w'}$ we have that $\KK\Vdash^{w'}_{\alpha[x:=a]} A$}
+	\end{align*}
+\end{definition}
+
+\begin{theorem}[Soundness]
+	If $\Gamma\vdash A$ then $\KK\Vdash^{w}_\alpha \Gamma$ implies $\KK\Vdash^{w}_\alpha A$ for all $w$ and $\alpha$.
+\end{theorem}
+
+\section{Algebraic Semantics}
+
+\enlargethispage{\baselineskip}
+
+\begin{definition}
+	We call $\AA=(\Omega,\le,0,1,\sqcap,\sqcup,\sqsupset,\bigsqcap)$ a complete \textbf{Heyting algebra} if:
+	\begin{itemize}
+		\item
+		$\le$ is a preorder on $\Omega$ with $0$ being minimal and $1$ being maximal
+		\item
+		$\sqcap$ forms greatest lower bounds / meets: $z\le x\sqcap y$ if and only if $z\le x$ and $z\le y$
+		\item
+		$\sqcup$ forms least upper bounds / joins: $x\sqcup y\le z$ if and only if $x\le z$ and $y\le z$
+		\item
+		$\sqsupset$ forms Heyting implication: $z\le x\sqsupset y$ if and only if $z\sqcap x \le y$
+		\item
+		$\bigsqcap$ forms arbitrary greatest lower bounds $ \textstyle y\le \bigsqcap S  \text{ if and only if } y\le x \text{ for all } y\in S$
+	\end{itemize}
+	Given any Heyting algebra $\AA$ and a valuation $V(P)\in \Omega$ for each atom define:
+	\begin{align*}
+		\lsem P\rsem &:= V(P)& \lsem A\land B\rsem &:= \lsem A\rsem \sqcap \lsem B\rsem\\
+		\lsem \bot\rsem &:= 0& \lsem A\lor B\rsem &:= \lsem A\rsem \sqcup \lsem B\rsem\\
+		\lsem \top\rsem &:= 1& \lsem A\to B\rsem &:= \lsem A\rsem \sqsupset \lsem B\rsem\\
+		\textstyle \lsem \forall x A\rsem &:=\bigsqcap_t \lsem A[t/x]\rsem &\lsem \exists x A\rsem &:=\bigsqcup_t \lsem A[t/x]\rsem
+	\end{align*}
+\end{definition}
+
+\begin{theorem}[Soundness]
+	If $\vdash A$ (or $\vdash_c A$), then $1\le \lsem A\rsem$ in any Heyting (or Boolean) algebra.
+\end{theorem}
+\end{document}

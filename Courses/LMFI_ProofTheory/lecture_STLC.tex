@@ -1,0 +1,358 @@
+\documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
+\usecolortheme{orchid}
+\setbeamertemplate{footline}[frame number]
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\title[Simply Typed Lambda Calculus]{Simply Typed Lambda Calculus}
+\author[Dominik Kirst]{Dominik Kirst}
+
+\date[November 18th, 2025]{LMFI Proof Theory Course\\November 18th, 2025}
+
+
+% BOXES
+\usepackage[many]{tcolorbox}
+\newtcolorbox{emptybox}[1][]{
+	beamer,
+	width=(0.7\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widerbox}[1][]{
+	beamer,
+	width=(0.8\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widebox}[1][]{
+	beamer,
+	width=(\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+
+% TIMELINE
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{stackengine}
+\usetikzlibrary{trees, shapes, calc, positioning, shadows}
+
+\definecolor{darkcerulean}{rgb}{0.063661, 0.257392, 0.477463}
+\definecolor{scooter}{rgb}{0.161162, 0.775760, 0.885416}
+
+
+% #1 – box name
+% #2 – left color
+% #3 – right color
+% #4 – Title (may contain #1)
+\newcommand{\newlargebox}[4]{
+	\newtcolorbox{#1}[1][]{
+		beamer,
+		width=\textwidth+7pt,
+		enlarge left by=-3pt,
+		titlerule=3mm,
+		colframe=white,
+		coltitle={#2},
+		bottom=2pt, 
+		top=-4pt,
+		left=6pt,  
+		toptitle=2pt,
+		bottomtitle=-2pt,
+		fonttitle=\bfseries\large,
+		adjusted title={#4},
+		outer arc=.5mm,
+		arc=.5mm,
+		no shadow,
+		fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+		interior titled code={
+			\path [left color = {#2}, right color = {#3}]
+			(title.south west) + (8pt, 0) rectangle ++(\textwidth-1pt, 0.02);
+		}
+	}
+}
+
+
+\newlargebox{defaultbox}{darkcerulean}{scooter}{#1} 
+
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+
+
+\begin{document}
+
+%\beamerdefaultoverlayspecification{<+->}
+\definecolor{red}{RGB}{204,0,0}
+\definecolor{yellow}{RGB}{228,242,31}
+\definecolor{green}{RGB}{0,204,0}
+
+\newcommand\refs[1]{%
+	\begin{textblock*}{8cm}(0.3cm,9.2cm)%
+		\scriptsize {\color{gray}#1}
+	\end{textblock*}
+}
+
+\renewcommand{\to}{\rightarrow}
+
+\begin{frame}
+	\maketitle
+\end{frame}
+
+\begin{frame}{Slogans}
+	\begin{itemize}
+		\item
+		Impose additional structure on computations
+		\pause
+		\vspace{0.5cm}
+		\item
+		Restricts to terminating computations
+		\pause
+		\vspace{0.5cm}
+		\item
+		Logical interpretation by Curry-Howard isomorphism
+		\pause
+		\vspace{0.5cm}
+		\item
+		Core of functional programming languages
+		\pause
+		\vspace{0.5cm}
+		\item
+		Extends to dependent type theories underlying proof assistants
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Overview}
+	Lecture 1:
+	\begin{itemize}
+		\item
+		Simply typed lambda calculus
+		\item
+		Structural properties
+		\item
+		Normalisation
+		\item
+		Curry-Howard isomorphism
+	\end{itemize}
+	
+	\vspace{0.4cm}
+	Lecture 2:
+	\begin{itemize}
+		\item
+		Strong normalisation
+		\item
+		Extension with products
+	\end{itemize}
+	
+	\vspace{0.4cm}
+	Lecture 3:
+	\begin{itemize}
+		\item
+		Extension with sums
+		\item
+		Intersection types
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Simple Types}
+	Assuming some base type $A,B,C,\dots$, we consider (simple) types:
+	\begin{itemize}
+		\item
+		Every base type is a type.
+		\item
+		If $\sigma$ and $\tau$ are types, then so is $\sigma\rightarrow \tau$.
+	\end{itemize}
+	
+	\vspace{0.8cm}
+	in STLC, terms $t$ are assigned types $\sigma$ in contexts $\Gamma$, written $\Gamma\vdash t:\sigma$, as follows:
+	$$
+	\infer{\Gamma \vdash x : \sigma}{(x:\sigma)\in \Gamma}\hspace{0.8cm}
+	\infer{\Gamma \vdash \lambda x^\sigma.t : \sigma\rightarrow \tau}{\Gamma, x:\sigma\vdash t:\tau}\hspace{0.8cm}
+	\infer{\Gamma\vdash tu:\tau}{\Gamma\vdash t :\sigma\rightarrow \tau & \Gamma \vdash u :\sigma}
+	$$
+	In the chosen presentation, variables $x$ in abstractions $\lambda x^\sigma.t$ are annotated with types.
+\end{frame}
+
+\begin{frame}{Example}
+	$$\infer{\vdash \lambda x^A y^B z^C. x z(yz) : (A\to B\to C)\to (A\to B) \to A \to C}{
+	\vdots
+	}$$
+\end{frame}
+
+\begin{frame}{Type Checking, Type Inference and Type Inhabitation}
+	We distinguish three different decision problems related to typing:
+	\begin{enumerate}
+		\item
+		\vspace{0.3cm}
+		Type checking: given $\Gamma$, $t$ and $\sigma$, does $\Gamma\vdash t:\sigma$ hold?\\
+		$\Rightarrow$ Decidable since the typing rules are deterministic!
+		\item
+		\vspace{0.3cm}
+		Type inference: given $\Gamma$ and $t$, is there $\sigma$ such that $\Gamma\vdash t:\sigma$ holds?\\
+		$\Rightarrow$ Decidable since most general types can be derived!
+		\vspace{0.3cm}
+		\item
+		Type inhabitation: given $\sigma$, are there $t$ and $\Gamma$ such that $\Gamma\vdash t:\sigma$ holds?\\
+		$\Rightarrow$ Decidable, but not trivially so!
+	\end{enumerate}
+	
+	\vspace{0.3cm}
+	In extensions of STLC, these may well become undecidable...
+\end{frame}
+
+\begin{frame}{Subject Reduction}
+	content
+\end{frame}
+
+\begin{frame}{Progress}
+	content
+\end{frame}
+
+\begin{frame}{Normalisation: Statement}
+	content
+\end{frame}
+
+\begin{frame}{Normalisation: Proof Sketch}
+	content
+\end{frame}
+
+\begin{frame}{The Magic Trick}
+	Reconsider the typing example from the beginning:
+	\vspace{0.7cm}
+	
+	$$\infer{\vdash \lambda x^A y^B z^C. x z(yz) : (A\to B\to C)\to (A\to B) \to A \to C}{
+	\infer{(x:A\to B\to C),(y:A \to B),(z:A)\vdash x z(yz):C}{
+	\infer{\Gamma\vdash xz: B\to C }{\infer{\Gamma\vdash x:A\to B\to C}{}&\infer{\Gamma\vdash z:A}{}}
+	&
+	\infer{\Gamma\vdash yz: B}{\infer{\Gamma\vdash y : A\to B}{}&\infer{\Gamma\vdash z: A}{}}
+	}
+	}$$
+	
+	\vspace{0.7cm}
+	What happens if we delete all term information?
+\end{frame}
+
+\begin{frame}{The Magic Trick}
+	Reconsider the typing example from the beginning:
+	\vspace{0.7cm}
+	
+	$$\infer{\vdash  (A\to B\to C)\to (A\to B) \to A \to C}{
+		\infer{(A\to B\to C,A \to B,A)\vdash C}{
+			\infer{\Gamma\vdash B\to C }{\infer{\Gamma\vdash A\to B\to C}{}&\infer{\Gamma\vdash A}{}}
+			&
+			\infer{\Gamma\vdash B}{\infer{\Gamma\vdash A\to B}{}&\infer{\Gamma\vdash  A}{}}
+		}
+	}$$
+	
+	\vspace{0.7cm}
+	We obtain a proof in natural deduction!
+\end{frame}
+
+\begin{frame}{The Curry-Howard Isomorphism}
+	content
+\end{frame}
+
+
+
+
+\end{document}
+
+
+
+%\begin{frame}{Bibliography}
+%%\begin{frame}{Bibliography}
+%\footnotesize
+%\bibliographystyle{apalike}
+%\bibliography{../biblio}
+%\end{frame}
+
+\appendix
+
+
+
+
+
+
+
+
+
+\end{document}
