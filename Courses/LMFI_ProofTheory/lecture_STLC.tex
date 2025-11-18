@@ -1,4 +1,4 @@
-\documentclass[xcolor=dvipsnames,aspectratio=169]{beamer}
+\documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
 \usecolortheme{orchid}
 \setbeamertemplate{footline}[frame number]
 
@@ -183,7 +183,7 @@
 	\begin{itemize}
 		\pause
 		\item
-		Impose additional structure on computations
+		Imposes additional structure on computations
 		\pause
 		\vspace{0.5cm}
 		\item
@@ -237,7 +237,7 @@
 
 \begin{frame}{Simple Types}
 	\pause
-	Assuming some base type $A,B,C,\dots$, we consider (simple) types:
+	Assuming some base types $A,B,C,\dots$, we consider (simple) types:
 	\begin{itemize}
 		\item
 		Every base type is a type.
@@ -247,19 +247,23 @@
 	
 	\pause
 	\vspace{0.8cm}
-	in STLC, terms $t$ are assigned types $\sigma$ in contexts $\Gamma$, written $\Gamma\vdash t:\sigma$, as follows:
+	In STLC, terms $t$ are assigned types $\sigma$ in contexts $\Gamma$, written $\Gamma\vdash t:\sigma$, as follows:
 	$$
 	\infer{\Gamma \vdash x : \sigma}{(x:\sigma)\in \Gamma}\hspace{0.8cm}
 	\infer{\Gamma \vdash \lambda x^\sigma.t : \sigma\rightarrow \tau}{\Gamma, x:\sigma\vdash t:\tau}\hspace{0.8cm}
 	\infer{\Gamma\vdash tu:\tau}{\Gamma\vdash t :\sigma\rightarrow \tau & \Gamma \vdash u :\sigma}
 	$$
 	\pause
-	In the chosen presentation, variables $x$ in abstractions $\lambda x^\sigma.t$ are annotated with types.
+	In this presentation, variables $x$ in abstractions $\lambda x^\sigma.t$ are usually annotated with types.
 \end{frame}
 
 \begin{frame}{Example}
-	$$\infer{\vdash \lambda x^A y^B z^C. x z(yz) : (A\to B\to C)\to (A\to B) \to A \to C}{
-	\vdots
+	$$\infer{\vdash \lambda x y z. x z(yz) : (A\to B\to C)\to (A\to B) \to A \to C}{
+		\infer{(x:A\to B\to C),(y:A \to B),(z:A)\vdash x z(yz):C}{
+			\infer{\Gamma\vdash xz: B\to C }{\infer{\Gamma\vdash x:A\to B\to C}{}&\infer{\Gamma\vdash z:A}{}}
+			&
+			\infer{\Gamma\vdash yz: B}{\infer{\Gamma\vdash y : A\to B}{}&\infer{\Gamma\vdash z: A}{}}
+		}
 	}$$
 \end{frame}
 
@@ -292,7 +296,7 @@
 \begin{frame}{Weakening and Substitutivity}
 	\pause
 	\begin{fact}[Weakening]
-		If $\Gamma\vdash t : \sigma$ and $\Gamma\subseteq \Delta$, then $\Gamma\vdash t : \sigma$
+		If $\Gamma\vdash t : \sigma$ and $\Gamma\subseteq \Delta$, then $\Delta\vdash t : \sigma$
 	\end{fact}
 	\pause
 	\begin{proof}
@@ -417,7 +421,7 @@
 	Reconsider the typing example from the beginning:
 	\vspace{0.7cm}
 	
-	$$\infer{\vdash \lambda x^A y^B z^C. x z(yz) : (A\to B\to C)\to (A\to B) \to A \to C}{
+	$$\infer{\vdash \lambda x y z. x z(yz) : (A\to B\to C)\to (A\to B) \to A \to C}{
 	\infer{(x:A\to B\to C),(y:A \to B),(z:A)\vdash x z(yz):C}{
 	\infer{\Gamma\vdash xz: B\to C }{\infer{\Gamma\vdash x:A\to B\to C}{}&\infer{\Gamma\vdash z:A}{}}
 	&
