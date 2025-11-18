@@ -1,4 +1,4 @@
-\documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
+\documentclass[xcolor=dvipsnames,aspectratio=169]{beamer}
 \usecolortheme{orchid}
 \setbeamertemplate{footline}[frame number]
 
@@ -25,6 +25,7 @@
 \usepackage{mathpartir}
 \usepackage{colonequals}
 \usepackage{xspace}
+\usepackage{tabularx}
 % Commands for correct abbreviations
 
 
@@ -180,6 +181,7 @@
 
 \begin{frame}{Slogans}
 	\begin{itemize}
+		\pause
 		\item
 		Impose additional structure on computations
 		\pause
@@ -234,6 +236,7 @@
 \end{frame}
 
 \begin{frame}{Simple Types}
+	\pause
 	Assuming some base type $A,B,C,\dots$, we consider (simple) types:
 	\begin{itemize}
 		\item
@@ -242,6 +245,7 @@
 		If $\sigma$ and $\tau$ are types, then so is $\sigma\rightarrow \tau$.
 	\end{itemize}
 	
+	\pause
 	\vspace{0.8cm}
 	in STLC, terms $t$ are assigned types $\sigma$ in contexts $\Gamma$, written $\Gamma\vdash t:\sigma$, as follows:
 	$$
@@ -249,6 +253,7 @@
 	\infer{\Gamma \vdash \lambda x^\sigma.t : \sigma\rightarrow \tau}{\Gamma, x:\sigma\vdash t:\tau}\hspace{0.8cm}
 	\infer{\Gamma\vdash tu:\tau}{\Gamma\vdash t :\sigma\rightarrow \tau & \Gamma \vdash u :\sigma}
 	$$
+	\pause
 	In the chosen presentation, variables $x$ in abstractions $\lambda x^\sigma.t$ are annotated with types.
 \end{frame}
 
@@ -259,40 +264,153 @@
 \end{frame}
 
 \begin{frame}{Type Checking, Type Inference and Type Inhabitation}
+	\pause
 	We distinguish three different decision problems related to typing:
 	\begin{enumerate}
+		\pause
 		\item
 		\vspace{0.3cm}
 		Type checking: given $\Gamma$, $t$ and $\sigma$, does $\Gamma\vdash t:\sigma$ hold?\\
 		$\Rightarrow$ Decidable since the typing rules are deterministic!
+		\pause
 		\item
 		\vspace{0.3cm}
 		Type inference: given $\Gamma$ and $t$, is there $\sigma$ such that $\Gamma\vdash t:\sigma$ holds?\\
 		$\Rightarrow$ Decidable since most general types can be derived!
 		\vspace{0.3cm}
+		\pause
 		\item
 		Type inhabitation: given $\sigma$, are there $t$ and $\Gamma$ such that $\Gamma\vdash t:\sigma$ holds?\\
 		$\Rightarrow$ Decidable, but not trivially so!
 	\end{enumerate}
 	
+	\pause
 	\vspace{0.3cm}
 	In extensions of STLC, these may well become undecidable...
 \end{frame}
 
+\begin{frame}{Weakening and Substitutivity}
+	\pause
+	\begin{fact}[Weakening]
+		If $\Gamma\vdash t : \sigma$ and $\Gamma\subseteq \Delta$, then $\Gamma\vdash t : \sigma$
+	\end{fact}
+	\pause
+	\begin{proof}
+		By induction on $\Gamma\vdash t : \sigma$ with $\Delta$ generalised.
+	\end{proof}
+	
+	\pause
+	\vspace{0.8cm}
+	\begin{fact}[Substitutivity]
+		If $\Gamma, x:\tau \vdash t : \sigma$ and $\Gamma \vdash u :\tau$, then $\Gamma\vdash t\{u/x\}:\sigma$.
+	\end{fact}
+	\pause
+	\begin{proof}
+		By induction on $\Gamma, x:\tau \vdash t : \sigma$.
+	\end{proof}
+\end{frame}
+
 \begin{frame}{Subject Reduction}
-	content
+	\pause
+	\begin{fact}
+		If $\Gamma\vdash t : \sigma$ and $t\longrightarrow_\beta u$, then $\Gamma\vdash u: \sigma$.
+	\end{fact}
+	\pause
+	\begin{proof}
+		\pause
+		By induction on $t\longrightarrow_\beta u$ with $\Gamma$ generalised:
+		\pause
+		\begin{itemize}
+			\item
+			If $(\lambda x^\sigma.t)u\longrightarrow_\beta t\{u/x\}$ and $\Gamma \vdash(\lambda x^\sigma.t)u:\tau$, then we know that $\Gamma, x:\sigma \vdash t :\tau $ and $\Gamma\vdash u :\sigma$.
+			Then the claim $\Gamma\vdash t\{u/x\}:\tau$ follows by substitutivity.
+			\pause
+			\item
+			If $(\lambda x^\sigma. t) \longrightarrow_\beta (\lambda x^\sigma.t')$ via $t\longrightarrow_\beta t'$ and $\Gamma \vdash (\lambda x^\sigma. t):\sigma\to\tau$, then we know that $\Gamma, x:\sigma\vdash t:\tau$.
+			Then by the IH for $\Gamma, x:\sigma$ we obtain $\Gamma, x:\sigma\vdash t':\tau$ and thus $\Gamma \vdash (\lambda x^\sigma. t'):\sigma\to\tau$ as desired.
+			\pause
+			\item
+			If $t u \longrightarrow_\beta t' u$ via $t \longrightarrow_\beta t'$ and $\Gamma\vdash tu:\tau$, then we know that $\Gamma \vdash t:\sigma\to\tau$ and $\Gamma\vdash u :\sigma$.
+			Then by the IH also $\Gamma \vdash t':\sigma\to\tau$ and thus $\Gamma\vdash t'u:\tau$ as desired.
+			\pause
+			\item
+			If $t u \longrightarrow_\beta t' u$ via $u \longrightarrow_\beta u'$ and $\Gamma\vdash tu:\tau$, then we know that $\Gamma \vdash t:\sigma\to\tau$ and $\Gamma\vdash u :\sigma$.
+			Then by the IH also $\Gamma \vdash u':\sigma$ and thus $\Gamma\vdash tu':\tau$ as desired.
+			\qedhere
+		\end{itemize}
+	\end{proof}
 \end{frame}
 
-\begin{frame}{Progress}
-	content
+\begin{frame}{Subject Expansion}
+	Is typing also preserved by expansion?
+	
+	\vspace{0.3cm}
+	\pause
+	If $\Gamma\vdash u : \sigma$ and $t\longrightarrow_\beta u$, then $\Gamma\vdash t : \sigma$?
+	
+	\vspace{0.8cm}
+	\pause
+	No!
+	\pause
+	$$(\lambda x y.x)(\lambda x.x)\Omega~ \longrightarrow_\beta^*~ \lambda x.x$$
+	\pause
+	Here $\lambda x.x$ on the left can be assigned any type $\sigma\to\sigma$ while $\Omega$ is untypable.
 \end{frame}
 
-\begin{frame}{Normalisation: Statement}
-	content
+\begin{frame}{Weak Normalisation: Statement}
+	For STLC, there are two notions of normalisation:
+	\begin{itemize}
+		\pause
+		\item
+		\emph{Weak normalisation} states that every well-typed term has a normal form.
+		\pause
+		\item
+		\emph{Strong normalisation} states that every reduction sequence ends in a normal form.
+	\end{itemize}
+	\pause
+	The latter implies the former but the converse is not true in general...
+	
+	\pause
+	\vspace{0.5cm}
+	In this lecture, we sketch a simple argument for the weaker property:
+	\begin{theorem}[Weak Normalisation]
+		If $\Gamma\vdash t : \sigma$, then $t$ has a normal form.
+	\end{theorem}
+	\vspace{0.5cm}
+	\pause
+	Does the converse also hold?
+	\pause
+	No, because $xx$ is a normal form but untypable!
 \end{frame}
 
-\begin{frame}{Normalisation: Proof Sketch}
-	content
+\begin{frame}{Weak Normalisation: Proof Sketch}
+	\begin{theorem}[Weak Normalisation]
+		If $\Gamma\vdash t : \sigma$, then $t$ has a normal form.
+	\end{theorem}
+	\pause
+	\begin{proof}[Proof Sketch]
+		\pause
+		We can define a well-order $o(t)$ such that whenever $t$ is not yet normal, there is $t'$ with $t\longrightarrow_\beta t'$ and $o(t')<o(t)$.
+		Then the claim follows by well-foundedness of $o$.
+		\begin{itemize}
+			\pause
+			\item
+			The degree of a type is its nesting depth of arrows.
+			\pause
+			\item
+			The degree of a redex is the degree of its arrow type.
+			\pause
+			\item
+			The degree $d(t)$ of a term $t$ is the max degree of its redexes.
+			\pause
+			\item
+			Then $o(t)=(d(t),n)$ where and $n$ is the number of redexes of max degree.
+		\end{itemize}
+		\pause
+		So if $t$ is not yet normal, just reduce one of it's redexes of max degree to obtain $t'$.
+	\end{proof}
+	\pause
+	The proof of strong normalisation that we discuss next week will be more intricate...
 \end{frame}
 
 \begin{frame}{The Magic Trick}
@@ -324,11 +442,58 @@
 	}$$
 	
 	\vspace{0.7cm}
-	We obtain a proof in natural deduction!
+	We obtain a proof in (intuitionistic) natural deduction!
 \end{frame}
 
 \begin{frame}{The Curry-Howard Isomorphism}
-	content
+	We can interpret logical propositions as computational types!
+	\vspace{0.2cm}
+	\pause
+	\begin{itemize}
+		\item
+		Proof checking becomes type checking
+		\vspace{0.2cm}
+		\pause
+		\item
+		Provability becomes type inhabitation
+		\vspace{0.2cm}
+		\pause
+		\item
+		Cut-elimination becomes normalisation
+	\end{itemize}
+	
+	\vspace{0.7cm}
+	\pause
+	This isomorphism is most direct for intuitionistic logic but can also be extended to accommodate classical logic via well-known program transformations.
+\end{frame}
+
+\begin{frame}{Perspective}
+	This interpretation goes a long way:
+	
+	\vspace{0.5cm}
+	\begin{center}
+		\begin{tabularx}{.628\textwidth}{|c|c|}
+			\hline
+			Implication& Function types\\
+			\hline
+			Conjunction & Product types\\
+			\hline
+			Disjunction & Sum types\\
+			\hline
+			Truth & Unit type\\
+			\hline
+			Falsity & Void type\\
+			\hline
+			Universal quantification & Dependent product type\\
+			\hline
+			Existential quantification & Dependent sum type\\
+			\hline
+		\end{tabularx}
+	\end{center}
+	
+	\pause
+	\vspace{0.5cm}
+	This also tells us what the respective proofs are and how they compute!
 \end{frame}
 
 
