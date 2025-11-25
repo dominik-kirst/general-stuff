@@ -219,7 +219,7 @@
 		\end{itemize}
 		\vspace{0.5cm}
 		\item
-		Strong normalisation
+		Strong normalisation\footnote{This proof essentially follows Chapter 6 in Girard's textbook ``Proofs and Types''.}
 		\begin{itemize}
 			\item
 			Full proof in detail
@@ -242,50 +242,178 @@
 	\infer{\vdash A\to A}{A\vdash A}
 	$$
 	
+	\pause
 	\vspace{0.5cm}
 	However, well-typed terms can be seen as proofs!
 	\begin{itemize}
+		\pause
 		\item
 		$\lambda x.x$ is a proof term for $A\Rightarrow A$
+		\pause
 		\item
 		$\lambda xy.x$ is a proof term for $A\Rightarrow B\Rightarrow A$
+		\pause
 		\item
 		$ \lambda x y z. x z(yz)$ is a proof term for $(A\Rightarrow B\Rightarrow C)\Rightarrow (A\Rightarrow B) \Rightarrow A \Rightarrow C$
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Strong Normalisation: Naive Ideas}
-	content
+\newcommand{\SN}{\textnormal{SN}}
+
+\begin{frame}{Formulating Strong Normalisation}
+	\pause
+	So far we have formulated strong normalisation of a term $t$ a bit vaguely:
+	\begin{itemize}
+		\item
+		``There is no infinitely descending chain of reductions starting from $t$.''
+		\item
+		``The depth $\nu(t)$ of the longest reduction chain starting from $t$ is finite.''
+	\end{itemize}
+	\vspace{0.5cm}
+	\pause
+	For a fully formal proof, we switch to an inductive characterisation:
+	\begin{definition}
+		We define the set $\SN$ of strongly normalising terms by the rule
+		$$\infer{t\in \SN}{\forall t'.\,(t\longrightarrow_\beta t') ~\to~ t'\in \SN}$$
+		stating that a term is strongly normalising if all its direct successors are.
+	\end{definition}
 \end{frame}
 
+\begin{frame}{Strong Normalisation: Naive Idea}
+	Can we just prove strong normalisation by induction on a typing derivation $\Gamma\vdash t:\sigma$?
+	\begin{itemize}
+		\pause
+		\item
+		\vspace{0.3cm}
+		If $(x:\sigma)\in \Gamma$, then $x\in \SN$ as $x$ is a normal form.
+		\vspace{0.3cm}
+		\pause
+		\item
+		If $\Gamma,x:\sigma \vdash t :\tau$ and by induction $t\in \SN$, then $(\lambda x.t)\in \SN$ follows:
+		\begin{itemize}
+			\pause
+			\item
+			If $(\lambda x.t)\longrightarrow_\beta t'$, then $t'$ must be of the form $\lambda x.u$ with $t\longrightarrow_\beta u$, so $(\lambda x.u)\in \SN$.
+		\end{itemize}
+		\vspace{0.3cm}
+		\pause
+		\item
+		If $\Gamma\vdash t :\sigma\to\tau$ and $\Gamma\vdash u:\sigma$ and $t,u\in \SN$, then $(tu)\in \SN$ follows:
+		\begin{itemize}
+			\pause
+			\item
+			If $tu\longrightarrow_\beta t' u$ with $t\longrightarrow_\beta t'$ we can conclude $(t' u)\in \SN$.
+			\pause
+			\item
+			If $tu\longrightarrow_\beta t u'$ with $u\longrightarrow_\beta u'$ we can conclude $(t u')\in \SN$.
+			\pause
+			\item
+			If $(\lambda x.t)u \longrightarrow_\beta t\{u/x\}$ we cannot conclude $t\{u/x\}\in \SN$ in general!
+		\end{itemize}
+	\end{itemize}
+	
+	\pause
+	\vspace{0.3cm}
+	\begin{center}
+		\begin{widerbox}
+			\centering
+			The set $\SN$ is not immediately closed under substitution...
+		\end{widerbox}
+	\end{center}
+\end{frame}
+
+\newcommand{\RED}{\textnormal{RED}}
+\newcommand{\NE}{\textnormal{NE}}
+
 \begin{frame}{Strong Normalisation: Reducible Terms}
-	content
+	\pause
+	A remedy is to carve out an intermediate structure controlling the shape of terms!
+	\begin{definition}
+		We define the set of reducible terms $\RED_\sigma$ by recursion on the type $\sigma$:
+		\vspace{-0.2cm}
+		\begin{align*}
+			\RED_A&~:=~ \{ \Gamma \vdash t : A \mid t\in \SN  \}\\
+			\RED_{\sigma\to\tau}&~:=~ \{ \Gamma \vdash t : \sigma\to\tau \mid \forall u \in \RED_\sigma.\, tu \in \RED_\tau  \}
+		\end{align*}
+		
+		\vspace{-0.2cm}
+		We also define the set of neutral terms $\NE$ to contain all terms but abstractions.
+	\end{definition}
+	\pause
+	We will show that $\Gamma\vdash t:\sigma$ implies $t\in \RED_\sigma$ and that $t\in \RED_\sigma$ implies $t\in \SN$.\\
+	For the second part, we actually show three properties simultaneously:
+	\begin{lemma}[Reducibility]
+		\begin{enumerate}
+			\item[P1]
+			$t\in \RED_\sigma \to t\in \SN$
+			\item[P2]
+			$t\in \RED_\sigma \to (t\longrightarrow_\beta t') \to t'\in \RED_\sigma$
+			\item[P3]
+			$t\in \NE\to (\forall t'.\,(t\longrightarrow_\beta t')\to t'\in \RED_\sigma)\to t\in \RED_\sigma$
+		\end{enumerate}
+	\end{lemma}
 \end{frame}
 
 \begin{frame}{Strong Normalisation: Reducibility at Atomic Types}
-	content
+	TODO
 \end{frame}
 
 \begin{frame}{Strong Normalisation: Reducibility at Function Types}
-	content
+	TODO
 \end{frame}
 
-\begin{frame}{Strong Normalisation: Reduction Lemma}
-	content
+\pause
+\begin{frame}{Strong Normalisation: Abstraction Lemma}
+	For the missing part that $\Gamma\vdash t:\sigma$ implies $t\in \RED_\sigma$, we first show a lemma:
+	\begin{lemma}
+		If for all $u\in \RED_\sigma$ we have $t\{u/x \}\in \RED\tau$, then $(\lambda x.t)\in \RED_{\sigma\to\tau}$.
+	\end{lemma}
+	\begin{proof}
+		By definition, given some $u\in \RED_\sigma$ show $(\lambda x.t)u\in \RED_\tau$, by induction on $u\in \SN$ (given by P1) and $t\in \SN$ (given by the assumption for $t\{x/x \}\in \RED_\tau$ and then P1).
+		\begin{itemize}
+			\item 
+			If $(\lambda x.t)u\longrightarrow_\beta t\{u/x \}$ then we know $t\{u/x \}\in \RED\tau$ by assumption.
+			\item
+			If $(\lambda x.t)u\longrightarrow_\beta (\lambda x.t')u$ with $t\longrightarrow_\beta t'$, then $(\lambda x.t')u$ by the IH for $t\in \SN$.
+			\item
+			If $(\lambda x.t)u\longrightarrow_\beta (\lambda x.t)u'$ with $u\longrightarrow_\beta u'$, then $(\lambda x.t)u'$ by the IH for $u\in \SN$.
+		\end{itemize}
+		Thus we conclude that $(\lambda x.t)u\in \RED_\tau$ by P3.
+	\end{proof}
 \end{frame}
 
+\pause
 \begin{frame}{Strong Normalisation: Conclusion}
-	content
+	\begin{theorem}
+		If $\Gamma\vdash t:\sigma$, then $t\in \RED_\sigma$.
+	\end{theorem}
+	\pause
+	\vspace{-0.3cm}
+	\begin{proof}
+		We prove by induction on $\Gamma\vdash t:\sigma$ the stronger claim that $t\{\rho\}\in \RED_\sigma$,\\
+		where $\{\rho\}=\{u_1/x_1,\dots,u_k/x_k\}$ substitutes all free variables $x_i$ of $t$ by $u_i\in \RED_{\sigma_i}$:
+		\begin{itemize}
+			\item
+			In the variable case, we have $(x:\sigma)\in \Gamma$ where $x=x_i$ and $\sigma=\sigma_i$ for some $i$ and conclude $x_i\{\sigma\}= u_i\in \RED{\sigma_i}$ by the condition on $\rho$.
+		\end{itemize}
+	\end{proof}
+	\pause
+	\begin{corollary}
+		If $\Gamma\vdash t:\sigma$, then $t\in \SN$.
+	\end{corollary}
 \end{frame}
 
+\pause
 \begin{frame}{Extending with Products: Syntax}
 	We extend the grammar for terms with primitive pairs and projections:
 	$$t,u ::= x\mid tu\mid \lambda x. t\mid (t,u)\mid \pi_1 t \mid \pi_2 t$$
 	
+	\pause
 	\vspace{0.3cm}
 	We then also extend the grammar for types with product types:
 	$$\sigma, \tau ::= A \mid \sigma\to\tau \mid \sigma \times \tau$$
 	
+	\pause
 	\vspace{0.3cm}
 	We finally extend the typing judgement in the expected way:
 	$$\infer{\Gamma \vdash (t,u):\sigma\times \tau}{\Gamma\vdash t:\sigma&\Gamma\vdash u:\tau}
@@ -301,10 +429,12 @@
 	We add two rules to the reduction system, telling how projections interact with pairs:
 	$$\pi_1(t,u)\longrightarrow_\beta t\hspace{3em}\pi_2(t,u)\longrightarrow_\beta u$$
 	
+	\pause
 	\vspace{0.3cm}
 	As with abstractions, pairs can additionally be endowed with an extensionality law:
 	$$(\pi_1 t,\pi_2 t)\longrightarrow_\eta t$$
 	
+	\pause
 	\vspace{0.3cm}
 	In any case, the well-behaved structure is preserved:
 	\begin{itemize}
@@ -316,7 +446,28 @@
 \end{frame}
 
 \begin{frame}{Extending with Products: Normalisation}
-	content
+	\begin{enumerate}
+		\pause
+		\item
+		Extend the previous proof, consider projections $\pi_1 t$ and $\pi_2t $ neutral.
+		\vspace{0.3cm}
+		\pause
+		\item
+		Define $\RED_{\sigma\times\tau}:= \{\Gamma \vdash t : \sigma\times\tau \mid \pi_1 t\in \RED_\sigma \land \pi_1 t\in \RED_\tau \}$.
+		\vspace{0.3cm}
+		\pause
+		\item
+		Establish the properties P1, P2 and P3.
+		\vspace{0.3cm}
+		\pause
+		\item
+		For the converse, establish the following lemma:
+	\end{enumerate}
+	\vspace{0.3cm}
+	\pause
+	\begin{lemma}
+		If $t\in \RED_\sigma$ and $u\in \RED_\tau$, then $(t,u)\in \RED_{\sigma\times\tau}$.
+	\end{lemma}
 \end{frame}
 
 \begin{frame}{Extending with Products: Logical Interpretation}
@@ -338,6 +489,7 @@
 	\infer{\Gamma\vdash B}{\Gamma\vdash A\land B}
 	$$
 	
+	\pause
 	\vspace{0.5cm}
 	So the Curry-Howard isomorphism extends to conjunction!
 	\begin{itemize}
