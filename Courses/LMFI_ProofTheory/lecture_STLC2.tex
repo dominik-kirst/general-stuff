@@ -289,11 +289,11 @@
 		\vspace{0.3cm}
 		\pause
 		\item
-		If $\Gamma,x:\sigma \vdash t :\tau$ and by induction $t\in \SN$, then $(\lambda x.t)\in \SN$ follows:
+		If $\Gamma,x:\sigma \vdash t :\tau$ and by induction $t\in \SN$, then $\lambda x.t\in \SN$ follows:
 		\begin{itemize}
 			\pause
 			\item
-			If $(\lambda x.t)\longrightarrow_\beta t'$, then $t'$ must be of the form $\lambda x.u$ with $t\longrightarrow_\beta u$, so $(\lambda x.u)\in \SN$.
+			If $\lambda x.t\longrightarrow_\beta t'$, then $t'$ must be of the form $\lambda x.u$ with $t\longrightarrow_\beta u$, so $\lambda x.u\in \SN$.
 		\end{itemize}
 		\vspace{0.3cm}
 		\pause
@@ -302,10 +302,10 @@
 		\begin{itemize}
 			\pause
 			\item
-			If $tu\longrightarrow_\beta t' u$ with $t\longrightarrow_\beta t'$ we can conclude $(t' u)\in \SN$.
+			If $tu\longrightarrow_\beta t' u$ with $t\longrightarrow_\beta t'$ we can conclude $t' u\in \SN$.
 			\pause
 			\item
-			If $tu\longrightarrow_\beta t u'$ with $u\longrightarrow_\beta u'$ we can conclude $(t u')\in \SN$.
+			If $tu\longrightarrow_\beta t u'$ with $u\longrightarrow_\beta u'$ we can conclude $t u'\in \SN$.
 			\pause
 			\item
 			If $(\lambda x.t)u \longrightarrow_\beta t\{u/x\}$ we cannot conclude $t\{u/x\}\in \SN$ in general!
@@ -355,11 +355,60 @@
 \end{frame}
 
 \begin{frame}{Strong Normalisation: Reducibility at Atomic Types}
-	TODO
+	\begin{enumerate}
+		\item[P1]
+		$t\in \RED_A \to t\in \SN$
+		\begin{itemize}
+			\item
+			Holds immediately by definition of $\RED_A$.
+		\end{itemize}
+		\vspace{0.5cm}
+		\item[P2]
+		$t\in \RED_A \to (t\longrightarrow_\beta t') \to t'\in \RED_A$
+		\begin{itemize}
+			\item
+			Holds because $\SN$ is closed under taking reduction steps.
+		\end{itemize}
+		\vspace{0.5cm}
+		\item[P3]
+		$t\in \NE\to (\forall t'.\,(t\longrightarrow_\beta t')\to t'\in \RED_A)\to t\in \RED_A$
+		\begin{itemize}
+			\item
+			Holds by definition of $\SN$, even disregarding the assumption $t\in \NE$.
+		\end{itemize}
+	\end{enumerate}
 \end{frame}
 
 \begin{frame}{Strong Normalisation: Reducibility at Function Types}
-	TODO
+	\begin{enumerate}
+		\item[P1]
+		$t\in \RED_{\sigma\to\tau} \to t\in \SN$
+		\begin{itemize}
+			\item
+			For $t\in \RED_{\sigma\to\tau}$, by P3 for $\sigma$ we have that $x\in \RED_{\sigma}$, so $tx\in \RED_\tau$ by definition of $\RED_{\sigma\to\tau}$, but then by P1 for $\tau$ we have $tx\in \SN$ and from there conclude $t\in \SN$.
+		\end{itemize}
+		\vspace{0.3cm}
+		\item[P2]
+		$t\in \RED_{\sigma\to\tau} \to (t\longrightarrow_\beta t') \to t'\in \RED_{\sigma\to\tau}$
+		\begin{itemize}
+			\item
+			Let $t\in \RED_{\sigma\to\tau}$ with $t\longrightarrow_\beta t'$ and assume $u\in\RED_\sigma$, then we conclude the goal $t'u\in \RED_\tau$ by P2 for $\tau$ since $tu\in\RED_\tau$ and $tu\longrightarrow_\beta t'u$.
+		\end{itemize}
+		\vspace{0.3cm}
+		\item[P3]
+		$t\in \NE\to (\forall t'.\,(t\longrightarrow_\beta t')\to t'\in \RED_{\sigma\to\tau})\to t\in \RED_{\sigma\to\tau}$
+		\begin{itemize}
+			\item
+			For the hypotheses and $u\in\RED_\sigma$ we prove $tu\in \RED_\tau$ by induction on $u\in \SN$, given by P1 for $\sigma$, and apply P3 for $\tau$, leaving us to analyse reduction steps from $tu$:
+			\begin{enumerate}
+				\item[1.]
+				If $tu\longrightarrow_\beta t'u$ via $t\longrightarrow_\beta t'$, then by the second hypothesis we know that $t'\in \RED_{\sigma\to\tau}$ and thus $t'u\in \RED_\tau$ as desired.
+				\item[2.]
+				If $tu\longrightarrow_\beta tu'$ via $u\longrightarrow_\beta u'$, then $tu'\in \RED_\tau$ by the IH from $u\in \SN$.
+			\end{enumerate}
+			No other step from $tu$ is possible by the hypothesis $t\in \NE$ that $t$ is no abstraction.
+		\end{itemize}
+	\end{enumerate}
 \end{frame}
 
 \pause
@@ -390,11 +439,16 @@
 	\pause
 	\vspace{-0.3cm}
 	\begin{proof}
-		We prove by induction on $\Gamma\vdash t:\sigma$ the stronger claim that $t\{\rho\}\in \RED_\sigma$,\\
+		We prove by induction on $\Gamma\vdash t:\sigma$ the stronger claim that $t\{\rho\}\in \RED_\sigma$ for all $\rho$,\\
 		where $\{\rho\}=\{u_1/x_1,\dots,u_k/x_k\}$ substitutes all free variables $x_i$ of $t$ by $u_i\in \RED_{\sigma_i}$:
 		\begin{itemize}
 			\item
 			In the variable case, we have $(x:\sigma)\in \Gamma$ where $x=x_i$ and $\sigma=\sigma_i$ for some $i$ and conclude $x_i\{\sigma\}= u_i\in \RED{\sigma_i}$ by the condition on $\rho$.
+			\item
+			In the application case, we have $t\{\rho\}\in \RED_{\sigma\to\tau}$ and $u\{\rho\}\in \RED_\sigma$ and so obtain $(tu)\{\rho\}=t\{\rho\}u\{\rho\}\in \RED_\sigma$ directly by definition of $\RED_{\sigma\to\tau}$.
+			\item
+			In the abstraction case, we have $t\{\rho\}\{u/x\}\in \RED_\tau$ and so obtain $(\lambda x.t)\{\rho\}=\lambda x.t\{\rho\}\in \RED_{\sigma\to\tau}$ by the previous lemma.
+			\qedhere
 		\end{itemize}
 	\end{proof}
 	\pause
