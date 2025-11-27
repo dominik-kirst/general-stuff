@@ -1,0 +1,127 @@
+\documentclass{article}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\newcommand{\lto}{\Rightarrow}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\UU}{\mathcal U}
+
+\renewcommand{\to}{\rightarrow}
+\newcommand{\SN}{\textnormal{SN}}
+\newcommand{\RED}{\textnormal{RED}}
+\newcommand{\NE}{\textnormal{NE}}
+
+\newtheorem{exercise}{Exercise}
+
+\begin{document}
+
+\title{Simply Typed Lambda Calculus}
+\author{Dominik Kirst}
+
+\date{LMFI Proof Theory Course\\November 27th, 2025}
+
+\maketitle
+
+\begin{exercise}[Typing Derivations]
+	Derive types for the following terms, where possible:
+	\begin{multicols}{2}
+		\begin{enumerate}
+			\item
+			$x$
+			\item
+			$\lambda x.xy$
+			\item
+			$\lambda xy.x(yxx)$
+			\item
+			$x(\lambda y.x)$
+		\end{enumerate}
+	\end{multicols}
+	\noindent
+	For some of these terms you may have to use a non-empty context.
+\end{exercise}
+
+\begin{exercise}[Structural Properties]
+	Establish the following structural properties:
+	\begin{enumerate}
+		\item 
+		Strengthening, i.e.~if $\Gamma,(x:\sigma)\vdash t:\tau$ and $x\not\in FV(t)$ then $\Gamma\vdash t:\tau$.
+		\item
+		Type uniqueness, i.e.~if $\vdash t:\tau$ and $\vdash t:\tau'$ then $t=t'$.
+	\end{enumerate}
+	\noindent
+	Note that for the latter it is crucial to have abstractions $\lambda x^\sigma.t$ with type annotations.
+\end{exercise}
+
+\begin{exercise}[Weak Normalisation]
+	Compute the size $o(t)$ for the typeable terms from Exercise 1.
+	Convince yourself that for every well-typed term $t$ that is not yet normal it is possible to find a suitable reduction step $t\longrightarrow_\beta t'$ with $o(t)<o(t')$.
+\end{exercise}
+
+\begin{exercise}[Products]
+	Extend the following two properties of STLC to product types:
+	\begin{enumerate}
+		\item
+		Subject reduction, i.e.~if $\Gamma\vdash t:\sigma $ and $t\longrightarrow_\beta t'$ then $\Gamma\vdash t':\sigma $.
+		\item
+		Strong normalisation, i.e.~if $\Gamma\vdash t:\sigma $ then $t\in \SN$.
+	\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Curry-Howard Isomorphism]
+	Give proof terms for the following propositions:
+	\begin{multicols}{2}
+		\begin{enumerate}
+			\item
+			$(A\land B\lto C)\lto A\lto B\lto C$
+			\item
+			$(A\lto B\lto C)\lto A\land B\lto C$
+			\item
+			$(A\lto C)\lto (B\lto D)\lto A\land B\lto C\land D$
+			\item
+			$A\land (B\land C)\lto (A\land B)\land C$
+		\end{enumerate}
+	\end{multicols}
+\end{exercise}
+
+\end{document}
