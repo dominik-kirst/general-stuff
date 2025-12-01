@@ -1,0 +1,369 @@
+ \documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
+\usecolortheme{orchid}
+\setbeamertemplate{footline}[frame number]
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+\usepackage{tabularx}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\title[Simply Typed Lambda Calculus 2]{Simply Typed Lambda Calculus 3}
+\author[Dominik Kirst]{Dominik Kirst}
+
+\date[December 2nd, 2025]{LMFI Proof Theory Course\\December 2nd, 2025}
+
+
+% BOXES
+\usepackage[many]{tcolorbox}
+\newtcolorbox{emptybox}[1][]{
+	beamer,
+	width=(0.7\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widerbox}[1][]{
+	beamer,
+	width=(0.8\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+\newtcolorbox{widebox}[1][]{
+	beamer,
+	width=(\textwidth),
+	% enlarge left by=-3pt,
+	titlerule=0mm,
+	colframe=white,
+	coltitle=black,
+	bottom=6pt, 
+	top=-12pt,
+	left=6pt,  
+	right=6pt,
+	notitle, 
+	adjusted title={},
+	outer arc=.5mm,
+	arc=.5mm,
+	no shadow,
+	fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+	interior titled code={}
+}
+
+
+% TIMELINE
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{stackengine}
+\usetikzlibrary{trees, shapes, calc, positioning, shadows}
+
+\definecolor{darkcerulean}{rgb}{0.063661, 0.257392, 0.477463}
+\definecolor{scooter}{rgb}{0.161162, 0.775760, 0.885416}
+
+
+% #1 – box name
+% #2 – left color
+% #3 – right color
+% #4 – Title (may contain #1)
+\newcommand{\newlargebox}[4]{
+	\newtcolorbox{#1}[1][]{
+		beamer,
+		width=\textwidth+7pt,
+		enlarge left by=-3pt,
+		titlerule=3mm,
+		colframe=white,
+		coltitle={#2},
+		bottom=2pt, 
+		top=-4pt,
+		left=6pt,  
+		toptitle=2pt,
+		bottomtitle=-2pt,
+		fonttitle=\bfseries\large,
+		adjusted title={#4},
+		outer arc=.5mm,
+		arc=.5mm,
+		no shadow,
+		fuzzy shadow={1mm}{-1mm}{-1.2mm}{.7mm}{black!20},
+		interior titled code={
+			\path [left color = {#2}, right color = {#3}]
+			(title.south west) + (8pt, 0) rectangle ++(\textwidth-1pt, 0.02);
+		}
+	}
+}
+
+
+\newlargebox{defaultbox}{darkcerulean}{scooter}{#1} 
+
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+
+
+\begin{document}
+
+%\beamerdefaultoverlayspecification{<+->}
+\definecolor{red}{RGB}{204,0,0}
+\definecolor{yellow}{RGB}{228,242,31}
+\definecolor{green}{RGB}{0,204,0}
+
+\newcommand\refs[1]{%
+	\begin{textblock*}{8cm}(0.3cm,9.2cm)%
+		\scriptsize {\color{gray}#1}
+	\end{textblock*}
+}
+
+\renewcommand{\to}{\rightarrow}
+\newcommand{\SN}{\textnormal{SN}}
+\newcommand{\RED}{\textnormal{RED}}
+\newcommand{\NE}{\textnormal{NE}}
+
+\begin{frame}
+	\maketitle
+\end{frame}
+
+
+\begin{frame}{Recap}
+	\begin{itemize}
+		\pause
+		\item
+		Proof terms:
+		$$\infer{\vdash \lambda xy.x: A\Rightarrow B\Rightarrow A}{x:A,y:B\vdash x:A}\hspace{3em}\rightsquigarrow\hspace{3em}
+		\infer{\vdash A\Rightarrow B\Rightarrow A}{A,B\vdash A}$$
+		
+		\pause
+		\vspace{0.5cm}
+		\item
+		Strong normalisation:
+		\begin{theorem}
+			If $\Gamma\vdash t:\sigma$, then $t\in \RED_\sigma$.
+		\end{theorem}
+		\pause
+		\vspace{0.5cm}
+		\item
+		Extension of STLC with products:
+		$$
+		\infer{\Gamma \vdash (t,u):\sigma\times \tau}{\Gamma\vdash t:\sigma&\Gamma\vdash u:\tau}
+		\hspace{3em}
+		\infer{\Gamma\vdash \pi_1 t : \sigma}{\Gamma\vdash t : \sigma \times \tau}
+		\hspace{3em}
+		\infer{\Gamma\vdash \pi_2 t : \tau}{\Gamma\vdash t : \sigma \times \tau}
+		$$
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Plan for Today}
+	\begin{itemize}
+		\item
+		Extension of STLC with sums
+		\begin{itemize}
+		\item
+		Syntax, operational semantics, normalisation, logical interpretation
+		\end{itemize}
+		\vspace{0.5cm}
+		\item
+		Gödel's system T
+		\begin{itemize}
+			\item
+			Syntax, operational semantics, normalisation, logical interpretation
+		\end{itemize}
+		\vspace{0.5cm}
+		\item
+		Intersection type systems
+		\begin{itemize}
+			\item
+			Connection to normalisation
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\newcommand{\match}[5]{\text{match }#1\text{ with }i_1{#2}\Rightarrow {#3} \text{ and } i_2{#4}\Rightarrow{#5}}
+\newcommand{\newmatch}[5]{\delta#1(#2.#3)(#4.#5)}
+
+\begin{frame}{Extending with Sums: Syntax}
+	We extend the grammar for terms with primitive injections and matches
+	$$t,u,v ::= \dots \mid i_1 t \mid i_2 t \mid \match t x u y v$$
+	
+	\pause
+	and often write $\newmatch t x u y v$ instead of $\match t x u y v$.
+	
+	\pause
+	\vspace{0.3cm}
+	We then also extend the grammar for types with sum types:
+	$$\sigma, \tau ::= \dots \mid \sigma + \tau$$
+	
+	\pause
+	\vspace{0.3cm}
+	We finally extend the typing judgement in the expected way:
+	$$\infer{\Gamma\vdash i_1 t : \sigma+\tau}{\Gamma\vdash t : \sigma}
+	\hspace{3em}
+	\infer{\Gamma\vdash i_2 t : \sigma+\tau}{\Gamma\vdash t : \tau}
+	\hspace{3em}
+	\infer{\Gamma\vdash \newmatch t x u y v : \rho}{\Gamma\vdash t :\sigma+\tau &\Gamma,x:\sigma\vdash u:\rho&\Gamma,y:\sigma\vdash v:\rho}
+	$$
+	
+\end{frame}
+
+\begin{frame}{Extending with Products: Operational Semantics}
+	We add two rules to the reduction system, telling how injections interact with matches:
+	$$\newmatch {(i_1t)} x u y v\longrightarrow_\beta u\{t/x\}\hspace{3em}\newmatch {(i_2t)} x u y v\longrightarrow_\beta v\{t/x\}$$
+	
+	\pause
+	\vspace{0.3cm}
+	As with abstractions, sums can additionally be endowed with an extensionality law:
+	$$\newmatch t x {i_1 x}y{i_2 y}\longrightarrow_\eta t$$
+	
+	\pause
+	\vspace{0.3cm}
+	In any case, the well-behaved structure is preserved:
+	\begin{itemize}
+		\item
+		The extended reduction systems have the Church-Rosser property
+		\item
+		So in particular, normal forms are still unqiue
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Extending with Products: Normalisation}
+	\begin{enumerate}
+		\pause
+		\item
+		Extend the previous proof, consider matches $\newmatch t x u y v$ neutral.
+		\vspace{0.3cm}
+		\pause
+		\item
+		Set $\RED_{\sigma+\tau}:= \{\Gamma \vdash t : \sigma+\tau \mid t\longrightarrow_\beta^* i_1 t',t'\in \RED_\sigma \lor t\longrightarrow_\beta^* i_2 t',t'\in \RED_\sigma \}$.
+		\vspace{0.3cm}
+		\pause
+		\item
+		For $t\in\RED_{\sigma+\tau}$ to $ t\in \SN$ establish the properties P1, P2 and P3.
+		\vspace{0.3cm}
+		\pause
+		\item
+		For $\Gamma \vdash t : \sigma+\tau$ to $ t\in\RED_{\sigma+\tau}$ establish the following lemma:
+	\end{enumerate}
+	\vspace{0.3cm}
+	\pause
+	\begin{lemma}
+		If $t\in \RED_\sigma$ and $u\in \RED_\tau$, then $(t,u)\in \RED_{\sigma\times\tau}$.
+	\end{lemma}
+\end{frame}
+
+\begin{frame}{Extending with Products: Logical Interpretation}
+	Naturally, the typing rules for products correspond to the ND rules for conjunction:
+	$$
+	\infer{\Gamma \vdash (t,u):\sigma\times \tau}{\Gamma\vdash t:\sigma&\Gamma\vdash u:\tau}
+	\hspace{3em}
+	\infer{\Gamma\vdash \pi_1 t : \sigma}{\Gamma\vdash t : \sigma \times \tau}
+	\hspace{3em}
+	\infer{\Gamma\vdash \pi_2 t : \tau}{\Gamma\vdash t : \sigma \times \tau}
+	$$
+	
+	\pause
+	$$
+	\infer{\Gamma \vdash A\land B}{\Gamma\vdash A&\Gamma\vdash B}
+	\hspace{3em}
+	\infer{\Gamma\vdash A}{\Gamma\vdash A\land B}
+	\hspace{3em}
+	\infer{\Gamma\vdash B}{\Gamma\vdash A\land B}
+	$$
+	
+	\pause
+	\vspace{0.5cm}
+	So the Curry-Howard isomorphism extends to conjunction!
+	\begin{itemize}
+		\item
+		$\lambda x.\pi_1 x$ is a proof term for $A\land B \Rightarrow A$
+		\item 
+		$\lambda x.\pi_2 x$ is a proof term for $A\land B \Rightarrow B$
+		\item
+		$\lambda xy.(x,y)$ is a proof term for $A\Rightarrow B\Rightarrow A\land B$
+	\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}
+
+
+
+%\begin{frame}{Bibliography}
+%%\begin{frame}{Bibliography}
+%\footnotesize
+%\bibliographystyle{apalike}
+%\bibliography{../biblio}
+%\end{frame}
+
+\appendix
+
+
+
+
+
+
+
+
+
+\end{document}
