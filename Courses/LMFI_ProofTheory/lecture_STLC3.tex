@@ -226,7 +226,7 @@
 		Gödel's system T
 		\begin{itemize}
 			\item
-			Syntax, operational semantics, normalisation, logical interpretation
+			Syntax, operational semantics, normalisation, realisability interpretation
 		\end{itemize}
 		\vspace{0.5cm}
 		\item
@@ -238,12 +238,12 @@
 	\end{itemize}
 \end{frame}
 
-\newcommand{\match}[5]{\text{match }#1\text{ with }i_1{#2}\Rightarrow {#3} \text{ and } i_2{#4}\Rightarrow{#5}}
+\newcommand{\match}[5]{\text{match }#1\text{ with }\iota_1{#2}\Rightarrow {#3} \text{ and } \iota_2{#4}\Rightarrow{#5}}
 \newcommand{\newmatch}[5]{\delta#1(#2.#3)(#4.#5)}
 
 \begin{frame}{Extending with Sums: Syntax}
 	We extend the grammar for terms with primitive injections and matches
-	$$t,u,v ::= \dots \mid i_1 t \mid i_2 t \mid \match t x u y v$$
+	$$t,u,v ::= \dots \mid \iota_1 t \mid \iota_2 t \mid \match t x u y v$$
 	
 	\pause
 	and often write $\newmatch t x u y v$ instead of $\match t x u y v$.
@@ -256,23 +256,23 @@
 	\pause
 	\vspace{0.3cm}
 	We finally extend the typing judgement in the expected way:
-	$$\infer{\Gamma\vdash i_1 t : \sigma+\tau}{\Gamma\vdash t : \sigma}
+	$$\infer{\Gamma\vdash \iota_1 t : \sigma+\tau}{\Gamma\vdash t : \sigma}
 	\hspace{3em}
-	\infer{\Gamma\vdash i_2 t : \sigma+\tau}{\Gamma\vdash t : \tau}
+	\infer{\Gamma\vdash \iota_2 t : \sigma+\tau}{\Gamma\vdash t : \tau}
 	\hspace{3em}
 	\infer{\Gamma\vdash \newmatch t x u y v : \rho}{\Gamma\vdash t :\sigma+\tau &\Gamma,x:\sigma\vdash u:\rho&\Gamma,y:\sigma\vdash v:\rho}
 	$$
 	
 \end{frame}
 
-\begin{frame}{Extending with Products: Operational Semantics}
+\begin{frame}{Extending with Sums: Operational Semantics}
 	We add two rules to the reduction system, telling how injections interact with matches:
-	$$\newmatch {(i_1t)} x u y v\longrightarrow_\beta u\{t/x\}\hspace{3em}\newmatch {(i_2t)} x u y v\longrightarrow_\beta v\{t/x\}$$
+	$$\newmatch {(\iota_1t)} x u y v\longrightarrow_\beta u\{t/x\}\hspace{3em}\newmatch {(\iota_2t)} x u y v\longrightarrow_\beta v\{t/x\}$$
 	
 	\pause
 	\vspace{0.3cm}
 	As with abstractions, sums can additionally be endowed with an extensionality law:
-	$$\newmatch t x {i_1 x}y{i_2 y}\longrightarrow_\eta t$$
+	$$\newmatch t x {\iota_1 x}y{\iota_2 y}\longrightarrow_\eta t$$
 	
 	\pause
 	\vspace{0.3cm}
@@ -285,7 +285,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Extending with Products: Normalisation}
+\begin{frame}{Extending with Sums: Normalisation}
 	\begin{enumerate}
 		\pause
 		\item
@@ -293,7 +293,7 @@
 		\vspace{0.3cm}
 		\pause
 		\item
-		Set $\RED_{\sigma+\tau}:= \{\Gamma \vdash t : \sigma+\tau \mid t\longrightarrow_\beta^* i_1 t',t'\in \RED_\sigma \lor t\longrightarrow_\beta^* i_2 t',t'\in \RED_\sigma \}$.
+		Define $\RED_{\sigma+\tau}:= \{\Gamma \vdash t : \sigma+\tau \mid t\longrightarrow_\beta^* \iota_1 t'\in \RED_\sigma \lor t\longrightarrow_\beta^* \iota_2 t'\in \RED_\tau \}$.
 		\vspace{0.3cm}
 		\pause
 		\item
@@ -306,39 +306,38 @@
 	\vspace{0.3cm}
 	\pause
 	\begin{lemma}
-		If $t\in \RED_\sigma$ and $u\in \RED_\tau$, then $(t,u)\in \RED_{\sigma\times\tau}$.
+		If for all $u'\in \RED_\sigma$ we have $u\{u'/x \}\in \RED_\rho$ for all $v'\in \RED_\tau$ we have $v\{v'/y \}\in \RED_\rho$, then $\newmatch t x u y v\in \RED_{\rho}$.
 	\end{lemma}
 \end{frame}
 
-\begin{frame}{Extending with Products: Logical Interpretation}
-	Naturally, the typing rules for products correspond to the ND rules for conjunction:
-	$$
-	\infer{\Gamma \vdash (t,u):\sigma\times \tau}{\Gamma\vdash t:\sigma&\Gamma\vdash u:\tau}
+\begin{frame}{Extending with Sums: Logical Interpretation}
+	Naturally, the typing rules for products correspond to the ND rules for disjunction:
+	$$\infer{\Gamma\vdash \iota_1 t : \sigma+\tau}{\Gamma\vdash t : \sigma}
 	\hspace{3em}
-	\infer{\Gamma\vdash \pi_1 t : \sigma}{\Gamma\vdash t : \sigma \times \tau}
+	\infer{\Gamma\vdash \iota_2 t : \sigma+\tau}{\Gamma\vdash t : \tau}
 	\hspace{3em}
-	\infer{\Gamma\vdash \pi_2 t : \tau}{\Gamma\vdash t : \sigma \times \tau}
+	\infer{\Gamma\vdash \newmatch t x u y v : \rho}{\Gamma\vdash t :\sigma+\tau &\Gamma,x:\sigma\vdash u:\rho&\Gamma,y:\sigma\vdash v:\rho}
 	$$
 	
 	\pause
 	$$
-	\infer{\Gamma \vdash A\land B}{\Gamma\vdash A&\Gamma\vdash B}
+	\infer{\Gamma\vdash A\lor B}{\Gamma\vdash A}
 	\hspace{3em}
-	\infer{\Gamma\vdash A}{\Gamma\vdash A\land B}
+	\infer{\Gamma\vdash A\lor B}{\Gamma\vdash B}
 	\hspace{3em}
-	\infer{\Gamma\vdash B}{\Gamma\vdash A\land B}
+	\infer{\Gamma\vdash C}{\Gamma\vdash A\lor B&\Gamma,A\vdash C&\Gamma,B\vdash C}
 	$$
 	
 	\pause
 	\vspace{0.5cm}
-	So the Curry-Howard isomorphism extends to conjunction!
+	So the Curry-Howard isomorphism extends to disjunction!
 	\begin{itemize}
 		\item
-		$\lambda x.\pi_1 x$ is a proof term for $A\land B \Rightarrow A$
+		$\lambda x.\iota_1 x$ is a proof term for $A \Rightarrow A\lor B$
 		\item 
-		$\lambda x.\pi_2 x$ is a proof term for $A\land B \Rightarrow B$
+		$\lambda x.\iota_2 x$ is a proof term for $B \Rightarrow A\lor B$
 		\item
-		$\lambda xy.(x,y)$ is a proof term for $A\Rightarrow B\Rightarrow A\land B$
+		$\lambda zuv.\newmatch z x {ux} y{vy}$ is a proof term for $A\lor B \Rightarrow (A\Rightarrow C) \Rightarrow (B\Rightarrow C)\Rightarrow C$
 	\end{itemize}
 \end{frame}
 
