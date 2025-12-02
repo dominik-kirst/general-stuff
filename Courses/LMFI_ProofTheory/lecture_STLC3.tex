@@ -1,4 +1,4 @@
- \documentclass[xcolor=dvipsnames,aspectratio=169]{beamer}
+ \documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
 \usecolortheme{orchid}
 \setbeamertemplate{footline}[frame number]
 
@@ -196,7 +196,7 @@
 		\item
 		Strong normalisation:
 		\begin{theorem}
-			If $\Gamma\vdash t:\sigma$, then $t\in \RED_\sigma$.
+			If $\Gamma\vdash t:\sigma$, then $t\in \SN$.
 		\end{theorem}
 		\pause
 		\vspace{0.5cm}
@@ -267,7 +267,7 @@
 
 \begin{frame}{Extending with Sums: Operational Semantics}
 	We add two rules to the reduction system, telling how injections interact with matches:
-	$$\newmatch {(\iota_1t)} x u y v\longrightarrow_\beta u\{t/x\}\hspace{3em}\newmatch {(\iota_2t)} x u y v\longrightarrow_\beta v\{t/x\}$$
+	$$\newmatch {(\iota_1t)} x u y v\longrightarrow_\beta u\{t/x\}\hspace{3em}\newmatch {(\iota_2t)} x u y v\longrightarrow_\beta v\{t/y\}$$
 	
 	\pause
 	\vspace{0.3cm}
@@ -306,7 +306,7 @@
 	\vspace{0.3cm}
 	\pause
 	\begin{lemma}
-		If for all $u'\in \RED_\sigma$ we have $u\{u'/x \}\in \RED_\upsilon$ for all $v'\in \RED_\tau$ we have $v\{v'/y \}\in \RED_\upsilon$, then $\newmatch t x u y v\in \RED_{\upsilon}$.
+		If $t\in \RED_{\sigma+\tau}$ and, additionally, for all $u'\in \RED_\sigma$ we have $u\{u'/x \}\in \RED_\upsilon$ and for all $v'\in \RED_\tau$ we have $v\{v'/y \}\in \RED_\upsilon$, then $\newmatch t x u y v\in \RED_{\upsilon}$.
 	\end{lemma}
 \end{frame}
 
@@ -417,22 +417,22 @@
 	\pause
 	There is a systematic way how formulas of HA can be interpreted as types in System T:
 	\begin{align*}
-		T(n=m)&:=\omega& T(\phi\Rightarrow \psi)&:=T(\phi)\to T(\psi)\\
-		T(\phi\land \psi)&:=T(\phi)\times T(\psi)&T(\forall x A)&:= \omega \to T(A)\\
-		T(\phi\lor \psi)&:=T(\phi)+T(\psi)&T(\exists x A)&:= \omega \times T(A)
+		T(n=m)&:=\omega& T(A_1\Rightarrow A_2 )&:=T(A_1)\to T(A_2 )\\
+		T(A_1\land A_2)&:=T(A_1)\times T(A_2 )&T(\forall x A)&:= \omega \to T(A)\\
+		T(A_1\lor A_2 )&:=T(A_1)+T(A_2 )&T(\exists x A)&:= \omega \times T(A)
 	\end{align*}
 	
 	\pause
 	Moreover, we can interpreters as their sets of realising terms of System T:
 	\begin{align*}
-		t\Vdash n=m &~:=~n \text{ equals } m& t\Vdash \phi\Rightarrow \psi&~:=~ tu\Vdash \psi \text{ for all } u\Vdash \phi\\
-		t\Vdash \phi\land \psi &~:=~\pi_1t \Vdash \phi\text{ and } \pi_2t \Vdash \psi& t\Vdash \forall x A &~:=~ t\overline n\Vdash A[\overline n/x] \text{ for all }n\in \mathbb{N} \\
-		\iota_i t\Vdash \phi_1\lor \phi_2 &~:=~t\Vdash \phi_i& t\Vdash \exists x A&:= \pi_2 t\Vdash A[\pi_1 t/x]
+		t\Vdash n=m &~:=~n \text{ equals } m& t\Vdash A_1 \Rightarrow A_2 &~:=~ tu\Vdash A_2  \text{ for all } u\Vdash A_1\\
+		t\Vdash A_1 \land A_2  &~:=~\pi_1t \Vdash A_1 \text{ and } \pi_2t \Vdash A_2 & t\Vdash \forall x A &~:=~ t\overline n\Vdash A[\overline n/x] \text{ for all }n\in \mathbb{N} \\
+		\iota_i t\Vdash A_1\lor A_2 &~:=~t\Vdash A_i& t\Vdash \exists x A&:= \pi_2 t\Vdash A[\pi_1 t/x]
 	\end{align*}
 	
 	\pause
 	\begin{theorem}
-		If $HA\vdash \phi$ then there is $t:T(\phi)$ such that $t\Vdash \phi$.
+		If $HA\vdash A$ then there is $t:T(A)$ such that $t\Vdash A$.
 	\end{theorem}
 \end{frame}
 
