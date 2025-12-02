@@ -1,4 +1,4 @@
- \documentclass[xcolor=dvipsnames,aspectratio=169,handout]{beamer}
+ \documentclass[xcolor=dvipsnames,aspectratio=169]{beamer}
 \usecolortheme{orchid}
 \setbeamertemplate{footline}[frame number]
 
@@ -260,7 +260,7 @@
 	\hspace{3em}
 	\infer{\Gamma\vdash \iota_2 t : \sigma+\tau}{\Gamma\vdash t : \tau}
 	\hspace{3em}
-	\infer{\Gamma\vdash \newmatch t x u y v : \rho}{\Gamma\vdash t :\sigma+\tau &\Gamma,x:\sigma\vdash u:\rho&\Gamma,y:\sigma\vdash v:\rho}
+	\infer{\Gamma\vdash \newmatch t x u y v : \upsilon}{\Gamma\vdash t :\sigma+\tau &\Gamma,x:\sigma\vdash u:\upsilon&\Gamma,y:\sigma\vdash v:\upsilon}
 	$$
 	
 \end{frame}
@@ -293,11 +293,11 @@
 		\vspace{0.3cm}
 		\pause
 		\item
-		Define $\RED_{\sigma+\tau}:= \{\Gamma \vdash t : \sigma+\tau \mid t\longrightarrow_\beta^* \iota_1 t'\in \RED_\sigma \lor t\longrightarrow_\beta^* \iota_2 t'\in \RED_\tau \}$.
+		Define $\RED_{\sigma+\tau}:= \{\Gamma \vdash t : \sigma+\tau \mid t\in \SN \land \forall t'.\, ((t\longrightarrow_\beta^* \iota_1 t')\to t'\in \RED_\sigma)$\\ \hspace{19.51em} $\land ((t\longrightarrow_\beta^* \iota_2 t')\to t'\in \RED_\tau) \}$.
 		\vspace{0.3cm}
 		\pause
 		\item
-		For $t\in\RED_{\sigma+\tau}$ to $ t\in \SN$ establish the properties P1, P2 and P3.
+		For $t\in\RED_{\sigma+\tau}$ establish the properties P1, P2 and P3.
 		\vspace{0.3cm}
 		\pause
 		\item
@@ -306,7 +306,7 @@
 	\vspace{0.3cm}
 	\pause
 	\begin{lemma}
-		If for all $u'\in \RED_\sigma$ we have $u\{u'/x \}\in \RED_\rho$ for all $v'\in \RED_\tau$ we have $v\{v'/y \}\in \RED_\rho$, then $\newmatch t x u y v\in \RED_{\rho}$.
+		If for all $u'\in \RED_\sigma$ we have $u\{u'/x \}\in \RED_\upsilon$ for all $v'\in \RED_\tau$ we have $v\{v'/y \}\in \RED_\upsilon$, then $\newmatch t x u y v\in \RED_{\upsilon}$.
 	\end{lemma}
 \end{frame}
 
@@ -316,7 +316,7 @@
 	\hspace{3em}
 	\infer{\Gamma\vdash \iota_2 t : \sigma+\tau}{\Gamma\vdash t : \tau}
 	\hspace{3em}
-	\infer{\Gamma\vdash \newmatch t x u y v : \rho}{\Gamma\vdash t :\sigma+\tau &\Gamma,x:\sigma\vdash u:\rho&\Gamma,y:\sigma\vdash v:\rho}
+	\infer{\Gamma\vdash \newmatch t x u y v : \upsilon}{\Gamma\vdash t :\sigma+\tau &\Gamma,x:\sigma\vdash u:\upsilon&\Gamma,y:\sigma\vdash v:\upsilon}
 	$$
 	
 	\pause
@@ -341,6 +341,139 @@
 	\end{itemize}
 \end{frame}
 
+\renewcommand{\O}{\mathsf{O}}
+\renewcommand{\S}{\mathsf{S}}
+\newcommand{\R}{\mathsf{R}}
+
+\begin{frame}{System T: Syntax}
+	We extend the grammar for terms with primitive injections and matches
+	$$t,u,v ::= \dots \mid \O\mid \S\,t\mid \R\,u\,v\,t .$$
+	
+	\pause
+	\vspace{0.3cm}
+	We then also extend the grammar for types with a type of numbers:
+	$$\sigma, \tau ::= \dots \mid \omega$$
+	
+	\pause
+	\vspace{0.3cm}
+	We finally extend the typing judgement in the expected way:
+	$$\infer{\Gamma\vdash O : \omega}{}
+	\hspace{3em}
+	\infer{\Gamma\vdash \S\, t : \omega}{\Gamma\vdash t : \omega}
+	\hspace{3em}
+	\infer{\Gamma\vdash \R\,u\,v\,t:\sigma}{\Gamma\vdash u :\sigma &\Gamma\vdash v:\sigma \to \omega\to \sigma&\Gamma\vdash t:\omega}
+	$$
+	
+\end{frame}
+
+\begin{frame}{System T: Operational Semantics}
+	We add two rules to the reduction system, telling how the recursor operates:
+	$$\R\,u\,v\,\O\longrightarrow_\beta u\hspace{3em}\R\,u\,v\,(\S\,t)\longrightarrow_\beta v(\R\,u\,v\,t)t$$
+	
+	\pause
+	\vspace{0.3cm}
+	Then we can define functions recursively, for instance addition:
+	$$t+t'~:=~\R\,t\,(\lambda xy.\,\S\,x)\,t'\hspace{5em}\overline 6+\overline 2\longrightarrow_\beta^* \overline 8$$
+	
+	\pause
+	\vspace{0.3cm}
+	In any case, the well-behaved structure is preserved:
+	\begin{itemize}
+		\item
+		The extended reduction systems have the Church-Rosser property
+		\item
+		So in particular, normal forms are still unqiue
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{System T: Normalisation}
+	\begin{enumerate}
+		\pause
+		\item
+		Extend the previous proof, consider recursion $\R\,u\,v\,t$ neutral.
+		\vspace{0.3cm}
+		\pause
+		\item
+		Define $\RED_\omega:= \{\Gamma \vdash t : \omega \mid t\in \SN  \}$.
+		\vspace{0.3cm}
+		\pause
+		\item
+		For $t\in\RED_\omega$ establish the properties P1, P2 and P3.
+		\vspace{0.3cm}
+		\pause
+		\item
+		For $\Gamma \vdash t : \omega$ to $ t\in\RED_\omega$ establish the following lemma:
+	\end{enumerate}
+	\vspace{0.3cm}
+	\pause
+	\begin{lemma}
+		If $t\in \RED_\omega$ then $\S\, t\in \RED_\omega$.
+	\end{lemma}
+\end{frame}
+
+\renewcommand{\phi}{\varphi}
+
+\begin{frame}{System T: Realisability Interpretation}
+	\pause
+	There is a systematic way how formulas of HA can be interpreted as types in System T:
+	\begin{align*}
+		T(n=m)&:=\omega& T(\phi\Rightarrow \psi)&:=T(\phi)\to T(\psi)\\
+		T(\phi\land \psi)&:=T(\phi)\times T(\psi)&T(\forall x A)&:= \omega \to T(A)\\
+		T(\phi\lor \psi)&:=T(\phi)+T(\psi)&T(\exists x A)&:= \omega \times T(A)
+	\end{align*}
+	
+	\pause
+	Moreover, we can interpreters as their sets of realising terms of System T:
+	\begin{align*}
+		t\Vdash n=m &~:=~n \text{ equals } m& t\Vdash \phi\Rightarrow \psi&~:=~ tu\Vdash \psi \text{ for all } u\Vdash \phi\\
+		t\Vdash \phi\land \psi &~:=~\pi_1t \Vdash \phi\text{ and } \pi_2t \Vdash \psi& t\Vdash \forall x A &~:=~ t\overline n\Vdash A[\overline n/x] \text{ for all }n\in \mathbb{N} \\
+		\iota_i t\Vdash \phi_1\lor \phi_2 &~:=~t\Vdash \phi_i& t\Vdash \exists x A&:= \pi_2 t\Vdash A[\pi_1 t/x]
+	\end{align*}
+	
+	\pause
+	\begin{theorem}
+		If $HA\vdash \phi$ then there is $t:T(\phi)$ such that $t\Vdash \phi$.
+	\end{theorem}
+\end{frame}
+
+\begin{frame}{Intersection Types: Overview}
+	\pause
+	There are many different systems, here is one possible version:
+	$$\sigma,\tau::= A\mid \bigwedge_{i=1}^k\tau_i \to \sigma$$
+	
+	\vspace{0.3cm}
+	\pause
+	The typing relation is adjusted accordingly with the following rule:
+	$$\infer{\Gamma \vdash tu\vdash \sigma}{\Gamma \vdash t  \bigwedge_{i=1}^k\tau_i \to \sigma&\forall i.\, (\Gamma \vdash u:\tau_i)}$$
+	
+	\vspace{0.3cm}
+	\pause
+	Note that with this choice for instance $xx$ and $KI\Omega$ are typeable!
+\end{frame}
+
+\begin{frame}{Intersection Types: Normalisation}
+	\pause
+	\begin{theorem}
+		A term $t$ is typeable if and only if it has a normal form.
+	\end{theorem}
+	\pause
+	\begin{proof}
+		That typeable terms have normal forms is complicated, for the converse:
+		\begin{enumerate}
+			\item
+			First show that normal forms are typeable.
+			\item
+			Establish subject expansion, showing that typeability propagates backwards.
+			\item
+			Conclude that all terms with normal forms are typeable.
+			\qedhere
+		\end{enumerate}
+	\end{proof}
+	
+	\vspace{0.3cm}
+	\pause
+	Consequence: typeability is undecidable in this system!
+\end{frame}
 
 
 
