@@ -120,7 +120,7 @@ This part represents half of the points of the end-term. In my opinion, it is re
 		Extend the inductive proof that $\Gamma\vdash t:\sigma$ implies $t\{\rho\}\in \RED_\sigma$ by giving the case for (BE).
 		Recall that $\rho=u_1/x_1,\dots,u_k/x_k$ substitutes all free variables $x_i$ of $t$ by $u_i\in \RED_{\sigma_i}$ where $(x_i:\sigma_i)\in \Gamma$.
 		\item
-		Derive that there is no closed term $t:\bot$. What does this mean for (propositional) NJ?
+		Derive that there is no closed term $t:\bot$. What does this mean for NJ (without quantifier rules)?
 	\end{enumerate}
 \end{exercise}
 
@@ -172,10 +172,10 @@ $$
 \infer{\Gamma \vdash \lambda x^\sigma.t : \sigma\rightarrow \tau}{\Gamma, x:\sigma\vdash t:\tau}\hspace{0.8cm}
 \infer{\Gamma\vdash tu:\tau}{\Gamma\vdash t :\sigma\rightarrow \tau & \Gamma \vdash u :\sigma}
 $$
-
 Recall that the strongly normalising terms $\SN$ are defined inductively:
 
 $$\infer{t\in \SN}{\forall t'.\,(t\longrightarrow_\beta t') ~\to~ t'\in \SN}$$
+The set $\NE$ of neutral terms contains all terms that are not abstractions.
 
 \end{document}
 
