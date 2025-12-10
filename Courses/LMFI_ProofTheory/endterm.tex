@@ -69,12 +69,13 @@
 \maketitle
 
 \noindent
-This part represents half of the points of the mid-term. In my opinion, it is reasonable to spend around 20min on Qeustion 1, 30min on Question 2 and 40min on Question 4.
+This part represents half of the points of the end-term. In my opinion, it is reasonable to spend around 20min on Qeustion 1, 30min on Question 2 and 40min on Question 3.
 
 \begin{exercise}[ND Derivations]
 	Establish $\vdash \neg\exists x\forall y(A(x,y)\Leftrightarrow \neg A(y,y) )$ and $\vdash_c (A\to B)\lor (B\to A)$.
 \end{exercise}
 
+\vspace{0.3cm}
 \begin{exercise}[F-Translation]
 	We study the following variant of the Friedman translation
 	\begin{align*}
@@ -87,36 +88,37 @@ This part represents half of the points of the mid-term. In my opinion, it is re
 		\item
 		Verify that $\vdash F \to A^F$ by induction on $A$.
 		\item
-		Derive that $\Gamma\vdash A$ implies $\Gamma^F\vdash A^F$. It suffices to show that $\Gamma^F\vdash \bot^F$ implies $\Gamma^F\vdash A^F$.
+		The proof that $\Gamma\vdash A$ implies $\Gamma^F\vdash A^F$ is by induction on $\Gamma\vdash A$. Give the case for (Exp).
 		\item
 		Justify briefly why $H\!A \vdash H\!A^F$, i.e.~HA proves every $F$-translated axiom.
 		\item
-		Assuming that $H\!A\vdash \neg\neg \exists x.t(x)=0$, choose $F$ suitable and derive that $H\!A\vdash\exists x.t(x)=0$.
+		Given $H\!A\vdash \neg\neg \exists x.t(x)=0$ for closed $t$, choose $F$ suitable and derive that $H\!A\vdash\exists x.t(x)=0$.
 	\end{enumerate}
 \end{exercise}
 
 \renewcommand{\to}{\rightarrow}
 
+\vspace{0.3cm}
 \begin{exercise}[Strong Normalisation]
-	We extend STLC with a unit type $\top$ and a void type $\bot$
-	$$\infer[TI]{\Gamma\vdash *:\top}{}\hspace{3em}
-	\infer[BE]{\Gamma\vdash E\,t:\sigma}{\Gamma\vdash t:\bot}
+	We extend STLC with a void type $\bot$
+	$$\infer[BE]{\Gamma\vdash E\,t:\sigma}{\Gamma\vdash t:\bot}
 	$$
-	including the additional congruence reduction $E\,t\longrightarrow_\beta E\,t'$ whenever $t\longrightarrow_\beta t'$.
+	with the congruence reduction $E\,t\longrightarrow_\beta E\,t'$ whenever $t\longrightarrow_\beta t'$.
+	Also, we consider terms $E\,t$ neutral.
 	\begin{enumerate}
 		\item
-		For $\sigma\in\{\bot,\top\}$ set $\RED_\sigma:=\{  \Gamma\vdash t:\sigma \mid t\in \SN \}$ and establish:
+		For $\RED_\bot=\{  \Gamma\vdash t:\bot \mid t\in \SN \}$ establish:
 		\begin{enumerate}
 			\item[P1:]
-			$t\in \RED_\sigma \to t\in \SN$
+			$t\in \RED_\bot \to t\in \SN$
 			\item[P2:]
-			$t\in \RED_\sigma \to (t\longrightarrow_\beta t') \to t'\in \RED_\sigma$
+			$t\in \RED_\bot \to (t\longrightarrow_\beta t') \to t'\in \RED_\bot$
 			\item[P3:]
-			$t\in \NE\to (\forall t'.\,(t\longrightarrow_\beta t')\to t'\in \RED_\sigma)\to t\in \RED_\sigma$
+			$t\in \NE\to (\forall t'.\,(t\longrightarrow_\beta t')\to t'\in \RED_\bot)\to t\in \RED_\bot$
 		\end{enumerate}
 		\item
-		Extend the inductive proof that $\Gamma\vdash t:\sigma$ implies $t\{\rho\}\in \RED_\sigma$ to (TI) and (BE).
-		Recall that here $\{\rho\}=\{u_1/x_1,\dots,u_k/x_k\}$ substitutes all free variables $x_i$ of $t$ by $u_i\in \RED_{\sigma_i}$ where $(x_i:\sigma_i)\in \Gamma$.
+		Extend the inductive proof that $\Gamma\vdash t:\sigma$ implies $t\{\rho\}\in \RED_\sigma$ by giving the case for (BE).
+		Recall that $\rho=u_1/x_1,\dots,u_k/x_k$ substitutes all free variables $x_i$ of $t$ by $u_i\in \RED_{\sigma_i}$ where $(x_i:\sigma_i)\in \Gamma$.
 		\item
 		Derive that there is no closed term $t:\bot$. What does this mean for (propositional) NJ?
 	\end{enumerate}
@@ -128,7 +130,7 @@ This part represents half of the points of the mid-term. In my opinion, it is re
 
 \section{Natural Deduction Systems}
 
-NJ is the system $\Gamma\vdash A$ and NK is the system $\Gamma\vdash_c A$ with the additional rule (DN).
+NJ is the system $\Gamma\vdash A$ and NK is the system $\Gamma\vdash_c A$ with all rules of NJ and additionally (DN).
 
 \begin{gather*}
 	\inference[Ax]{A\in \Gamma}{\Gamma\vdash A}\hspace{2em}
@@ -149,7 +151,7 @@ NJ is the system $\Gamma\vdash A$ and NK is the system $\Gamma\vdash_c A$ with t
 \end{gather*}
 
 \vspace{0.5cm}
-\section{Heyting Arithmetic}
+\section{Heyting Arithmetic (HA)}
 
 In the language of arithmetics $(0,S,+,\cdot)$ with equality consider the following axioms
 \begin{align*}
@@ -171,6 +173,9 @@ $$
 \infer{\Gamma\vdash tu:\tau}{\Gamma\vdash t :\sigma\rightarrow \tau & \Gamma \vdash u :\sigma}
 $$
 
+Recall that the strongly normalising terms $\SN$ are defined inductively:
+
+$$\infer{t\in \SN}{\forall t'.\,(t\longrightarrow_\beta t') ~\to~ t'\in \SN}$$
 
 \end{document}
 
