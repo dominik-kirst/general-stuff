@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{hyperref}
+\usepackage[inference]{semantic}
+\usepackage{graphicx}
+\usepackage{amsfonts,amsmath}
+\usepackage{cleveref}
+\usepackage{scalerel}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{proof}
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{mathtools}
+\usepackage{mathpartir}
+\usepackage{colonequals}
+\usepackage{xspace}
+% Commands for correct abbreviations
+
+
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,chains}
+
+\EnableBpAbbreviations
+
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+\usepackage{dsfont}
+
+\renewcommand{\to}{\Rightarrow}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\UU}{\mathcal U}
+\renewcommand{\AA}{\mathcal A}
+\newcommand{\lsem}{[\![}
+\newcommand{\rsem}{]\!]}
+\renewcommand{\LL}{\mathcal{L}}
+
+\newtheorem{exercise}{Question}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+	
+\newcommand{\SN}{\textnormal{SN}}
+\newcommand{\RED}{\textnormal{RED}}
+\newcommand{\NE}{\textnormal{NE}}
+
+\title{LMFI – Cours fondamental de logique\\Théorie de la démonstration}
+\author{Part on Natural Deduction}
+
+\date{Dominik Kirst\\End-term exam, December 17th, 2025}
+
+\maketitle
+
+\noindent
+This part represents half of the points of the mid-term. In my opinion, it is reasonable to spend around 20min on Qeustion 1, 30min on Question 2 and 40min on Question 4.
+
+\begin{exercise}[ND Derivations]
+	Establish $\vdash \neg\exists x\forall y(A(x,y)\Leftrightarrow \neg A(y,y) )$ and $\vdash_c (A\to B)\lor (B\to A)$.
+\end{exercise}
+
+\begin{exercise}[F-Translation]
+	We study the following variant of the Friedman translation
+	\begin{align*}
+		P^F &:= P \lor F & (A\lor B)^F &:= A^F\lor B^F\\
+		(A\to B)^F &:= A^F\to B^F & (\forall x A)^F &:=\forall  x A^F\\
+		(A\land B)^F &:=A^F\land B^F & (\exists x A)^F & := \exists x A^F
+	\end{align*}
+	where $F$ is a closed formula. So $A^F$ is $A$ with every atom $P$ replaced by $P\lor F$, in particular $\bot^F\Leftrightarrow F$.
+	\begin{enumerate}
+		\item
+		Verify that $\vdash F \to A^F$ by induction on $A$.
+		\item
+		Derive that $\Gamma\vdash A$ implies $\Gamma^F\vdash A^F$. It suffices to show that $\Gamma^F\vdash \bot^F$ implies $\Gamma^F\vdash A^F$.
+		\item
+		Justify briefly why $H\!A \vdash H\!A^F$, i.e.~HA proves every $F$-translated axiom.
+		\item
+		Assuming that $H\!A\vdash \neg\neg \exists x.t(x)=0$, choose $F$ suitable and derive that $H\!A\vdash\exists x.t(x)=0$.
+	\end{enumerate}
+\end{exercise}
+
+\renewcommand{\to}{\rightarrow}
+
+\begin{exercise}[Strong Normalisation]
+	We extend STLC with a unit type $\top$ and a void type $\bot$
+	$$\infer[TI]{\Gamma\vdash *:\top}{}\hspace{3em}
+	\infer[BE]{\Gamma\vdash E\,t:\sigma}{\Gamma\vdash t:\bot}
+	$$
+	including the additional congruence reduction $E\,t\longrightarrow_\beta E\,t'$ whenever $t\longrightarrow_\beta t'$.
+	\begin{enumerate}
+		\item
+		For $\sigma\in\{\bot,\top\}$ set $\RED_\sigma:=\{  \Gamma\vdash t:\sigma \mid t\in \SN \}$ and establish:
+		\begin{enumerate}
+			\item[P1:]
+			$t\in \RED_\sigma \to t\in \SN$
+			\item[P2:]
+			$t\in \RED_\sigma \to (t\longrightarrow_\beta t') \to t'\in \RED_\sigma$
+			\item[P3:]
+			$t\in \NE\to (\forall t'.\,(t\longrightarrow_\beta t')\to t'\in \RED_\sigma)\to t\in \RED_\sigma$
+		\end{enumerate}
+		\item
+		Extend the inductive proof that $\Gamma\vdash t:\sigma$ implies $t\{\rho\}\in \RED_\sigma$ to (TI) and (BE).
+		Recall that here $\{\rho\}=\{u_1/x_1,\dots,u_k/x_k\}$ substitutes all free variables $x_i$ of $t$ by $u_i\in \RED_{\sigma_i}$ where $(x_i:\sigma_i)\in \Gamma$.
+		\item
+		Derive that there is no closed term $t:\bot$. What does this mean for (propositional) NJ?
+	\end{enumerate}
+\end{exercise}
+
+
+\newpage
+\appendix
+
+\section{Natural Deduction Systems}
+
+NJ is the system $\Gamma\vdash A$ and NK is the system $\Gamma\vdash_c A$ with the additional rule (DN).
+
+\begin{gather*}
+	\inference[Ax]{A\in \Gamma}{\Gamma\vdash A}\hspace{2em}
+	\inference[Exp]{\Gamma\vdash\bot}{\Gamma\vdash A}\hspace{2em}
+	\inference[II]{\Gamma,A\vdash B}{\Gamma\vdash A\to B}\hspace{2em}
+	\inference[IE]{\Gamma\vdash A\to B& \Gamma \vdash A}{\Gamma \vdash B}\\[0,5cm]
+	\inference[CI]{\Gamma\vdash A&\Gamma\vdash B}{\Gamma \vdash A\land B}\hspace{2em}
+	\inference[CE1]{\Gamma\vdash A\land B}{\Gamma \vdash A}\hspace{2em}
+	\inference[CE2]{\Gamma\vdash A\land B}{\Gamma \vdash B}\\[0,5cm]
+	\inference[DI1]{\Gamma\vdash A}{\Gamma\vdash A\lor B}\hspace{2em}
+	\inference[DI2]{\Gamma\vdash B}{\Gamma\vdash A\lor B}\hspace{2em}
+	\inference[OE]{\Gamma\vdash A\lor B&\Gamma,A\vdash C&\Gamma,B\vdash C}{\Gamma \vdash C}\\[0,5cm]
+	\inference[AI]{\Gamma \vdash A & x\not\in FV(\Gamma)}{\Gamma\vdash \forall x A}\hspace{2em}
+	\inference[AE]{\Gamma\vdash \forall x A}{\Gamma\vdash A[t/x]}\\[0,5cm]
+	\inference[EI]{\Gamma\vdash A[t/x]}{\Gamma\vdash \exists x A}\hspace{2em}
+	\inference[EE]{\Gamma\vdash \exists x A&\Gamma,A\vdash B&x\not\in FV(\Gamma,B)}{\Gamma\vdash B}\hspace{2em}
+	\inference[DN]{\Gamma,\neg A\vdash_c\bot}{\Gamma\vdash_c A}
+\end{gather*}
+
+\vspace{0.5cm}
+\section{Heyting Arithmetic}
+
+In the language of arithmetics $(0,S,+,\cdot)$ with equality consider the following axioms
+\begin{align*}
+	x+0&=x & x+ (S y)&= S(x + y)\\
+	x\cdot 0&= 0 & x \cdot (Sy) &= x+ x\cdot y\\
+	0&\not= Sx & x &= y \text{ whenever } Sx = Sy
+\end{align*}
+as well as the following axiom scheme for every formula A:
+$$A(0) \to (\forall x A(x) \to A (Sx)) \to \forall x A(x)$$
+
+\vspace{0.5cm}
+\section{Simply Typed Lambda Calculus}
+
+The typing assignment of STLC is defined as follows:
+
+$$
+\infer{\Gamma \vdash x : \sigma}{(x:\sigma)\in \Gamma}\hspace{0.8cm}
+\infer{\Gamma \vdash \lambda x^\sigma.t : \sigma\rightarrow \tau}{\Gamma, x:\sigma\vdash t:\tau}\hspace{0.8cm}
+\infer{\Gamma\vdash tu:\tau}{\Gamma\vdash t :\sigma\rightarrow \tau & \Gamma \vdash u :\sigma}
+$$
+
+
+\end{document}
+
